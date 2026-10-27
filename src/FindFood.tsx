@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Search, MapPin, SlidersHorizontal, LocateFixed, ArrowUpRight, Sparkles, List, Map, X, Heart, Check, Info, ArrowRight } from 'lucide-react';
+import { Search, SlidersHorizontal, LocateFixed, ArrowUpRight, Sparkles, List, Map, X, Heart, Check, Info, ArrowRight } from 'lucide-react';
 import { useDemo } from './lib/store';
 import { resolveArea, distance } from './lib/services';
 import { days, today, time } from './lib/data';
