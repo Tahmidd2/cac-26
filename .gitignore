@@ -218,3 +218,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Nourish frontend
+node_modules/
+dist/
+*.tsbuildinfo
+!src/lib/
+!src/lib/**
