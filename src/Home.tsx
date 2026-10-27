@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search } from "lucide-react";
+import { Search, ArrowRight, LocateFixed, HeartHandshake } from "lucide-react";
+import ShaderField from "./components/ShaderField";
 import { directoryMetadata, publicLocations, volunteerPhoto } from "./lib/data";
 import { Reveal, useParallax } from "./components/Motion";
 import { atlasPoint, boroughPaths, boroughLabels } from "./lib/geography";
@@ -225,18 +226,18 @@ function JourneyStory() {
               style={{ strokeDashoffset: 100 - ((active + 1) / 3) * 100 }}
               d="M60 215 C60 100 190 245 210 125 S360 30 365 75"
             />
-            <circle cx="60" cy="215" r="12" />
-            <circle cx="210" cy="125" r="12" />
-            <circle cx="365" cy="75" r="12" />
-            <text x="35" y="255">
-              Find
-            </text>
-            <text x="187" y="170">
-              Travel
-            </text>
-            <text x="330" y="122">
-              Collect
-            </text>
+            {[
+              [60, 215, "Find", 250],
+              [210, 125, "Travel", 88],
+              [365, 75, "Collect", 38],
+            ].map(([x, y, label, ly], i) => (
+              <g key={label} className={i <= active ? "node done" : "node"}>
+                <circle cx={x} cy={y} r="13" />
+                <text x={x} y={ly as number} textAnchor="middle">
+                  {label}
+                </text>
+              </g>
+            ))}
           </svg>
           <div className="journey-caption" key={active}>
             <h3>{headings[active]}</h3>
@@ -299,8 +300,14 @@ export default function Home() {
   return (
     <div className="home-v2">
       <section className="home-hero" ref={parallax}>
+        <div className="hero-backdrop" aria-hidden="true">
+          <ShaderField variant="hero" />
+        </div>
         <div className="hero-copy">
-          <p className="hero-location">New York, together.</p>
+          <p className="hero-location">
+            <span className="live-dot" /> {directoryMetadata.count} free food
+            programs across NYC
+          </p>
           <h1>
             Good food.
             <br />
@@ -319,7 +326,7 @@ export default function Home() {
               );
             }}
           >
-            <label htmlFor="hero-area">Let’s start where you are.</label>
+            <label htmlFor="hero-area">Start where you are</label>
             <div>
               <Search size={20} />
               <input
@@ -329,15 +336,41 @@ export default function Home() {
                 placeholder="Your ZIP code or neighborhood"
                 aria-label="Your ZIP code or neighborhood"
               />
+              <Link
+                className="hero-geo"
+                to="/find-food?locate=1"
+                aria-label="Use my location"
+                title="Use my location"
+              >
+                <LocateFixed size={18} />
+              </Link>
               <button className="button button-primary" type="submit">
-                Find food
+                Search
               </button>
             </div>
           </form>
-          <div className="hero-followup">
-            <span>No account needed. Everyone is welcome.</span>
-            <Link to="/volunteer">I’d like to volunteer</Link>
+          <div className="hero-cta-row">
+            <Link
+              className="button button-primary button-lg"
+              to="/find-food?today=true"
+            >
+              Find food open today <ArrowRight size={18} />
+            </Link>
+            <Link className="button button-outline button-lg" to="/volunteer">
+              <HeartHandshake size={18} /> Volunteer
+            </Link>
           </div>
+          <ul className="hero-trust">
+            <li>
+              <b>{directoryMetadata.count}</b> public programs
+            </li>
+            <li>
+              <b>5</b> boroughs
+            </li>
+            <li>
+              <b>0</b> sign-ups needed
+            </li>
+          </ul>
         </div>
         <div className="hero-visual">
           <div className="hero-image-frame">

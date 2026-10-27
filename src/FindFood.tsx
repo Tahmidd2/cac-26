@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   Search,
@@ -10,7 +10,12 @@ import {
   X,
 } from "lucide-react";
 import { useDemo } from "./lib/store";
-import { resolveArea, distance } from "./lib/services";
+import {
+  resolveArea,
+  distance,
+  nearestZip,
+  areaSuggestions,
+} from "./lib/services";
 import { days, time, directoryMetadata } from "./lib/data";
 import { hasFoodToday, serviceWindows } from "./lib/schedules";
 import FoodMap from "./components/Map";
@@ -116,44 +121,45 @@ export default function FindFood() {
       );
       return;
     }
-    setGeoMessage("Finding an approximate neighborhood…");
+    setGeoMessage("Finding your neighborhood…");
     navigator.geolocation.getCurrentPosition(
       (p) => {
-        const nearest = [...state.locations]
+        const { latitude, longitude } = p.coords;
+        const nearestProgram = state.locations
           .filter((l) => l.sourceKind === "public")
-          .sort(
-            (a, b) =>
-              distance(
-                [p.coords.latitude, p.coords.longitude],
-                [a.lat, a.lng],
-              ) -
-              distance([p.coords.latitude, p.coords.longitude], [b.lat, b.lng]),
-          )[0];
-        if (
-          distance(
-            [p.coords.latitude, p.coords.longitude],
-            [nearest.lat, nearest.lng],
-          ) > 35
-        ) {
+          .reduce(
+            (m, l) =>
+              Math.min(m, distance([latitude, longitude], [l.lat, l.lng])),
+            Infinity,
+          );
+        const z = nearestZip(latitude, longitude);
+        if (!z || nearestProgram > 35) {
           setGeoMessage(
             "The food directory covers New York City. Enter an NYC or nearby ZIP code to explore it.",
           );
           return;
         }
-        setArea(nearest.zip);
-        setQuery(nearest.zip);
-        setJourney({ ...journey, area: nearest.zip });
+        setArea(z.zip);
+        setQuery(z.zip);
+        setLimit(20);
+        setJourney({ ...journey, area: z.zip });
         setGeoMessage(
-          `Using ZIP ${nearest.zip} as an approximate starting area. Precise device coordinates are discarded.`,
+          `Showing programs near ZIP ${z.zip}. Your exact location isn’t saved — only the ZIP area.`,
         );
       },
-      () =>
+      (err) =>
         setGeoMessage(
-          "Location could not be shared. You can still search by neighborhood or ZIP code.",
+          err.code === err.PERMISSION_DENIED
+            ? "Location permission was declined. Search by neighborhood or ZIP code instead."
+            : "Your location couldn’t be found. Search by neighborhood or ZIP code instead.",
         ),
-      { timeout: 10000 },
+      { timeout: 10000, maximumAge: 300000 },
     );
   }
+  useEffect(() => {
+    if (params.get("locate")) geolocate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const saved = state.locations
     .filter((l) => state.saved.includes(l.id))
     .slice(0, 4);
@@ -190,7 +196,14 @@ export default function FindFood() {
               value={area}
               onChange={(e) => setArea(e.target.value)}
               placeholder="ZIP, neighborhood, or borough"
+              list="area-suggestions"
+              autoComplete="off"
             />
+            <datalist id="area-suggestions">
+              {areaSuggestions.map((a) => (
+                <option key={a} value={a} />
+              ))}
+            </datalist>
             <button
               className="geo-button"
               type="button"
@@ -427,6 +440,8 @@ export default function FindFood() {
             className={`map-panel ${view === "list" ? "mobile-hidden" : ""}`}
           >
             <FoodMap
+              origin={origin}
+              radiusMiles={Number(radius)}
               locations={mapLocations}
               selected={hovered || selected}
               onSelect={(id) => {

@@ -4,8 +4,7 @@ export const directoryMetadata = directorySnapshot.metadata;
 export const publicLocations = directorySnapshot.locations as FoodLocation[];
 export const foodPhoto =
   "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1400&q=85";
-export const volunteerPhoto =
-  "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=1200&q=85";
+export const volunteerPhoto = "/images/volunteers-unloading-produce.jpg";
 export const days = [
   "Sunday",
   "Monday",

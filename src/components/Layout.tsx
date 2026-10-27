@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import ShaderField from "./ShaderField";
 import {
   Link,
   NavLink,
@@ -9,6 +10,7 @@ import {
 import { Menu, X } from "lucide-react";
 import { Brand, Modal } from "./ui";
 import { useDemo } from "../lib/store";
+import { directoryMetadata } from "../lib/data";
 import type { Role } from "../lib/types";
 export default function Layout() {
   const { state, update } = useDemo();
@@ -16,6 +18,14 @@ export default function Layout() {
     [roleOpen, setRoleOpen] = useState(false);
   const navigate = useNavigate(),
     location = useLocation();
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const on = () => setScrolled(window.scrollY > 12);
+    on();
+    window.addEventListener("scroll", on, { passive: true });
+    return () => window.removeEventListener("scroll", on);
+  }, []);
+  const isHome = location.pathname === "/";
   function switchRole(role: Role) {
     update((s) => ({ ...s, role }));
     setRoleOpen(false);
@@ -32,7 +42,9 @@ export default function Layout() {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      <header className="site-header">
+      <header
+        className={`site-header ${scrolled ? "is-scrolled" : ""} ${isHome ? "on-home" : ""}`}
+      >
         <div className="nav-wrap">
           <Brand />
           <nav
@@ -59,6 +71,9 @@ export default function Layout() {
             <button className="role-button" onClick={() => setRoleOpen(true)}>
               Explore the demo
             </button>
+            <Link className="nav-cta" to="/find-food">
+              Find food
+            </Link>
             <button
               className="menu-toggle icon-button"
               aria-label={menu ? "Close menu" : "Open menu"}
@@ -71,9 +86,32 @@ export default function Layout() {
         </div>
       </header>
       <main id="main" key={location.pathname}>
+        {!isHome && (
+          <div className="page-aura" aria-hidden="true">
+            <ShaderField variant="ambient" intensity={0.9} />
+          </div>
+        )}
         <Outlet />
       </main>
       <footer className="site-footer">
+        <div className="footer-cta">
+          <div>
+            <h2>Good food is closer than you think.</h2>
+            <p>
+              Search {directoryMetadata.count} free food programs across all
+              five boroughs. No account, no sign-up.
+            </p>
+          </div>
+          <div className="footer-cta-actions">
+            <Link className="button button-light" to="/find-food">
+              Find food near me
+            </Link>
+            <Link className="button button-ghost-light" to="/volunteer">
+              Volunteer
+            </Link>
+          </div>
+          <ShaderField variant="deep" />
+        </div>
         <div className="footer-top">
           <div>
             <Brand />

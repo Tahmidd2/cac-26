@@ -86,6 +86,26 @@ const neighborhoods: Record<string, [number, number]> = {
   "jersey city": [40.717, -74.044],
   hoboken: [40.744, -74.032],
 };
+const titleCase = (s: string) =>
+  s.replace(/\b\w/g, (c) => c.toUpperCase()).replace("Bed Stuy", "Bed-Stuy");
+export const areaSuggestions = [
+  ...new Set(Object.keys(neighborhoods).map(titleCase)),
+].sort();
+/** Nearest ZIP-area center to a point. Used so precise coordinates are never stored. */
+export function nearestZip(lat: number, lng: number) {
+  let best = "",
+    bestD = Infinity;
+  for (const [zip, c] of Object.entries(
+    zipCentroids as Record<string, number[]>,
+  )) {
+    const d = (c[0] - lat) ** 2 + ((c[1] - lng) * 0.76) ** 2;
+    if (d < bestD) {
+      bestD = d;
+      best = zip;
+    }
+  }
+  return best ? { zip: best, miles: Math.sqrt(bestD) * 69 } : null;
+}
 export function resolveArea(
   area: string,
   locations: FoodLocation[],

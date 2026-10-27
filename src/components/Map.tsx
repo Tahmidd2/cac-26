@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -6,6 +6,7 @@ import {
   Popup,
   Tooltip,
   GeoJSON,
+  Circle,
   useMap,
   useMapEvents,
 } from "react-leaflet";
@@ -220,31 +221,99 @@ function Controls() {
     </div>
   );
 }
+const TILES = {
+  primary:
+    "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+  fallback: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+};
+function Origin({
+  origin,
+  radiusMiles,
+}: {
+  origin: [number, number];
+  radiusMiles?: number;
+}) {
+  return (
+    <>
+      {radiusMiles && radiusMiles <= 15 ? (
+        <Circle
+          center={origin}
+          radius={radiusMiles * 1609.34}
+          pathOptions={{
+            color: "#2f6a4f",
+            weight: 1.5,
+            dashArray: "6 6",
+            fillColor: "#dee998",
+            fillOpacity: 0.12,
+          }}
+          interactive={false}
+        />
+      ) : null}
+      <Marker
+        position={origin}
+        interactive={false}
+        keyboard={false}
+        zIndexOffset={1000}
+        icon={L.divIcon({
+          className: "origin-pin",
+          html: `<span class="origin-dot"><i></i></span><span class="origin-label">You’re here</span>`,
+          iconSize: [22, 22],
+          iconAnchor: [11, 11],
+        })}
+      />
+    </>
+  );
+}
 export default function FoodMap({
   locations,
   selected,
   onSelect,
   compact = false,
+  origin,
+  radiusMiles,
 }: {
+  origin?: [number, number] | null;
+  radiusMiles?: number;
   locations: FoodLocation[];
   selected: string;
   onSelect: (id: string) => void;
   compact?: boolean;
 }) {
   const [failed, setFailed] = useState(false);
+  const [tileSource, setTileSource] = useState<"primary" | "fallback">(
+    "primary",
+  );
+  const errors = useRef(0);
   return (
     <div className={`food-map ${compact ? "compact-map" : ""}`}>
       <MapContainer
         center={[40.7489, -73.8913]}
         zoom={12}
         zoomControl={false}
-        scrollWheelZoom={false}
+        scrollWheelZoom={!compact}
+        zoomSnap={0.5}
+        wheelPxPerZoomLevel={90}
         className="leaflet-map"
       >
         <TileLayer
-          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          eventHandlers={{ tileerror: () => setFailed(true) }}
+          key={tileSource}
+          url={TILES[tileSource]}
+          subdomains="abcd"
+          detectRetina
+          attribution={
+            tileSource === "primary"
+              ? '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+              : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          }
+          eventHandlers={{
+            tileerror: () => {
+              errors.current += 1;
+              if (errors.current < 4) return;
+              errors.current = 0;
+              if (tileSource === "primary") setTileSource("fallback");
+              else setFailed(true);
+            },
+          }}
         />
         <GeoJSON
           data={boroughBoundaries as FeatureCollection}
@@ -252,8 +321,9 @@ export default function FoodMap({
             color: "#456a4b",
             weight: 1.5,
             fillColor: "#e6efdf",
-            fillOpacity: 0.07,
-            opacity: 0.8,
+            fillOpacity: 0.04,
+            opacity: 0.55,
+            dashArray: "4 4",
           }}
           onEachFeature={(feature, layer) => {
             layer.bindTooltip(feature.properties?.name || "Borough", {
@@ -263,6 +333,7 @@ export default function FoodMap({
             });
           }}
         />
+        {origin && <Origin origin={origin} radiusMiles={radiusMiles} />}
         <Hubs locations={locations} selected={selected} onSelect={onSelect} />
         <Sync locations={locations} selected={selected} onSelect={onSelect} />
         <Controls />

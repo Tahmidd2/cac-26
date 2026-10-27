@@ -6,6 +6,7 @@ import Layout from "./components/Layout";
 import { Loading } from "./components/ui";
 import Home from "./Home";
 import "./styles.css";
+import "./polish.css";
 const FindFood = lazy(() => import("./FindFood"));
 const Matching = lazy(() => import("./Matching"));
 const FoodDetail = lazy(() => import("./FoodDetail"));
