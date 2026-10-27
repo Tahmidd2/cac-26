@@ -76,6 +76,46 @@ main {
   background: linear-gradient(160deg, #f3f6ea, var(--paper));
 }
 
+/* ---------- Brand ---------- */
+.brand {
+  gap: 10px;
+  font-size: 30px;
+  letter-spacing: -1.2px;
+}
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  box-shadow: 0 4px 12px -4px #244d3e80;
+  transition: transform 0.3s var(--ease);
+}
+.brand:hover .brand-mark {
+  transform: rotate(-6deg) scale(1.05);
+}
+.brand-period {
+  margin-left: -10px;
+  color: #6f9a3c;
+}
+.footer-top .brand {
+  font-size: 34px;
+}
+.footer-top .brand-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+}
+@media (max-width: 640px) {
+  .brand {
+    font-size: 26px;
+  }
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+  }
+}
+
 /* ---------- Glass navigation ---------- */
 .site-header {
   background: #fafbf7a8;

@@ -1,12 +1,30 @@
 import { useEffect, useRef, type ReactNode } from "react";
-import { X, Sprout, Check, LoaderCircle } from "lucide-react";
+import { X, Check, LoaderCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 export function Brand() {
   return (
     <Link className="brand" to="/" aria-label="Nourish home">
-      <span className="brand-icon">
-        <Sprout size={25} strokeWidth={1.9} />
-      </span>
+      <svg className="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="18" fill="#244d3e" />
+        <path
+          d="M32 35V25"
+          stroke="#fafbf7"
+          strokeWidth="3.2"
+          strokeLinecap="round"
+        />
+        <path
+          d="M32 28.5C24.5 28.5 19.5 23.5 19.5 15.5C27 15.5 32 20.5 32 28.5Z"
+          fill="#fafbf7"
+        />
+        <path
+          d="M32 25C32 18 36.5 13 44.5 13C44.5 20.5 39.5 25 32 25Z"
+          fill="#dee998"
+        />
+        <path
+          d="M13 35H51C51 45.5 42.5 53 32 53C21.5 53 13 45.5 13 35Z"
+          fill="#dee998"
+        />
+      </svg>
       nourish<span className="brand-period">.</span>
     </Link>
   );
