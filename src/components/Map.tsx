@@ -5,11 +5,14 @@ import {
   Marker,
   Popup,
   Tooltip,
+  GeoJSON,
   useMap,
   useMapEvents,
 } from "react-leaflet";
 import { Link } from "react-router-dom";
 import L from "leaflet";
+import type { FeatureCollection } from "geojson";
+import boroughBoundaries from "../data/borough-boundaries.json";
 import { LocateFixed, Minus, Plus } from "lucide-react";
 import type { FoodLocation } from "../lib/types";
 import "leaflet/dist/leaflet.css";
@@ -112,6 +115,7 @@ function Hubs({
               })}
               eventHandlers={{
                 click: () =>
+                  zoom < 17 &&
                   map.fitBounds(
                     L.latLngBounds(
                       group.map((l) => [l.lat, l.lng] as [number, number]),
@@ -138,8 +142,24 @@ function Hubs({
                     .join(" · ")}
                   {group.length > 3 ? "…" : ""}
                 </small>
-                <small>Click or press Enter to zoom into this area.</small>
+                <small>
+                  {zoom >= 17
+                    ? "Click or press Enter to choose a program."
+                    : "Click or press Enter to zoom into this area."}
+                </small>
               </Tooltip>
+              {zoom >= 17 && (
+                <Popup>
+                  <strong>{group.length} food programs at this spot</strong>
+                  <ul className="cluster-programs">
+                    {group.map((location) => (
+                      <li key={location.id}>
+                        <Link to={`/food/${location.id}`}>{location.name}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                </Popup>
+              )}
             </Marker>
           );
         }
@@ -225,6 +245,23 @@ export default function FoodMap({
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           eventHandlers={{ tileerror: () => setFailed(true) }}
+        />
+        <GeoJSON
+          data={boroughBoundaries as FeatureCollection}
+          style={{
+            color: "#456a4b",
+            weight: 1.5,
+            fillColor: "#e6efdf",
+            fillOpacity: 0.07,
+            opacity: 0.8,
+          }}
+          onEachFeature={(feature, layer) => {
+            layer.bindTooltip(feature.properties?.name || "Borough", {
+              permanent: true,
+              direction: "center",
+              className: "borough-tooltip",
+            });
+          }}
         />
         <Hubs locations={locations} selected={selected} onSelect={onSelect} />
         <Sync locations={locations} selected={selected} onSelect={onSelect} />

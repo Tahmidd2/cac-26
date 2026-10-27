@@ -82,10 +82,17 @@ export function Planner({
     [arrival, setArrival] = useState(
       existing?.arrivalMinutes ||
         Math.round(
-          Math.max(
-            (initialWindow?.start || 13) * 60 + 15,
-            journey.period === "Afternoon" ? 12 * 60 + 15 : 0,
-          ),
+          initialWindow
+            ? Math.min(
+                initialWindow.end * 60 - 10,
+                Math.max(
+                  initialWindow.start * 60 + 15,
+                  journey.period === "Afternoon" && initialWindow.end > 12
+                    ? 12 * 60 + 15
+                    : 0,
+                ),
+              )
+            : 13 * 60 + 15,
         ),
     ),
     [confirmed, setConfirmed] = useState(existing?.providerConfirmed || !real),

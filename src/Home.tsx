@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import { directoryMetadata, publicLocations, volunteerPhoto } from "./lib/data";
 import { Reveal, useParallax } from "./components/Motion";
+import { atlasPoint, boroughPaths, boroughLabels } from "./lib/geography";
 const boroughs = ["Queens", "Brooklyn", "Manhattan", "Bronx", "Staten Island"];
 function NetworkAtlas() {
   const [active, setActive] = useState("All five boroughs");
@@ -10,6 +11,9 @@ function NetworkAtlas() {
     (l) => active === "All five boroughs" || l.borough === active,
   );
   const count = points.length;
+  const [hoveredHub, setHoveredHub] = useState<
+    (typeof publicLocations)[number] | null
+  >(null);
   const activeIds = new Set(points.map((p) => p.id));
   return (
     <section className="network-section" id="our-neighborhoods">
@@ -64,61 +68,100 @@ function NetworkAtlas() {
           <span>{active}</span>
           <span>{count} public programs</span>
         </div>
-        <svg
-          viewBox="0 0 580 630"
-          role="img"
-          aria-label={`${count} food program locations in ${active}`}
-        >
-          <defs>
-            <pattern
-              id="atlas-grid"
-              width="42"
-              height="42"
-              patternUnits="userSpaceOnUse"
-            >
-              <path
-                d="M 42 0 L 0 0 0 42"
-                fill="none"
-                stroke="#c8d6ca"
-                strokeWidth=".65"
-              />
-            </pattern>
-          </defs>
-          <rect width="580" height="630" fill="url(#atlas-grid)" />
-          {publicLocations.map((l) => (
-            <circle
-              key={l.id}
-              cx={((l.lng + 74.25) / 0.53) * 530 + 20}
-              cy={590 - ((l.lat - 40.5) / 0.43) * 550}
-              r={activeIds.has(l.id) ? 3 : 1.5}
-              fill={activeIds.has(l.id) ? "#315b44" : "#b4c5b4"}
-              opacity={activeIds.has(l.id) ? 0.9 : 0.3}
-            >
-              <title>
-                {l.name}, {l.borough}
-              </title>
-            </circle>
-          ))}
-          <text x="350" y="90">
-            Bronx
-          </text>
-          <text x="300" y="224">
-            Manhattan
-          </text>
-          <text x="435" y="295">
-            Queens
-          </text>
-          <text x="350" y="470">
-            Brooklyn
-          </text>
-          <text x="45" y="550">
-            Staten Island
-          </text>
-        </svg>
+        <div className="atlas-map-frame">
+          <svg
+            viewBox="0 0 580 630"
+            role="img"
+            aria-label={`${count} food programs, with official outlines for all five New York City boroughs`}
+          >
+            <defs>
+              <pattern
+                id="atlas-grid"
+                width="42"
+                height="42"
+                patternUnits="userSpaceOnUse"
+              >
+                <path
+                  d="M 42 0 L 0 0 0 42"
+                  fill="none"
+                  stroke="#d6e2d6"
+                  strokeWidth=".6"
+                />
+              </pattern>
+            </defs>
+            <rect width="580" height="630" fill="#e2ece8" />
+            <rect
+              width="580"
+              height="630"
+              fill="url(#atlas-grid)"
+              opacity=".5"
+            />
+            <g className="borough-outlines">
+              {boroughPaths.map((borough, i) => (
+                <path
+                  key={borough.name}
+                  d={borough.path}
+                  pathLength={100}
+                  fillRule="evenodd"
+                  className={`borough-shape ${active === borough.name ? "active-borough" : ""} ${active !== "All five boroughs" && active !== borough.name ? "muted-borough" : ""}`}
+                  style={{ animationDelay: `${i * 70}ms` }}
+                >
+                  <title>{borough.name} borough boundary</title>
+                </path>
+              ))}
+            </g>
+            <g className="atlas-dots">
+              {publicLocations.map((l) => {
+                const [x, y] = atlasPoint(l.lng, l.lat);
+                const isActive = activeIds.has(l.id);
+                return (
+                  <circle
+                    key={l.id}
+                    cx={x}
+                    cy={y}
+                    r={hoveredHub?.id === l.id ? 5 : isActive ? 2.8 : 1.8}
+                    fill={isActive ? "#315b44" : "#9fb6a0"}
+                    opacity={isActive ? 0.88 : 0.3}
+                    onMouseEnter={() => setHoveredHub(l)}
+                    onMouseLeave={() => setHoveredHub(null)}
+                  >
+                    <title>
+                      {l.name} — {l.serviceTypes?.join(" & ") || l.type},{" "}
+                      {l.borough}
+                    </title>
+                  </circle>
+                );
+              })}
+            </g>
+            <g className="borough-map-labels">
+              {boroughLabels.map((label) => (
+                <text
+                  key={label.name}
+                  x={label.point[0]}
+                  y={label.point[1]}
+                  textAnchor="middle"
+                  className={active === label.name ? "active-label" : ""}
+                >
+                  {label.name}
+                </text>
+              ))}
+            </g>
+          </svg>
+          {hoveredHub && (
+            <div className="atlas-hub-tooltip" role="tooltip">
+              <strong>{hoveredHub.name}</strong>
+              <span>
+                {hoveredHub.serviceTypes?.join(" & ") || hoveredHub.type} ·{" "}
+                {hoveredHub.borough} {hoveredHub.zip}
+              </span>
+            </div>
+          )}
+        </div>
         <p>
           Each dot is a public food-program location.
           <br />
-          NYC Food Help directory snapshot. Confirm before visiting.
+          Programs: NYC Food Help. Borough outlines: NYC Department of City
+          Planning. Confirm before visiting.
         </p>
       </Reveal>
     </section>

@@ -1,5 +1,5 @@
 import type { FoodLocation, ServiceWindow, VisitPlan } from "./types";
-import { today, datePlus, newYorkHour } from "./data";
+import { today, datePlus, newYorkMinutes } from "./data";
 export function serviceWindows(location: FoodLocation): ServiceWindow[] {
   if (location.weeklySchedule) return location.weeklySchedule;
   return location.days.map((day) => ({
@@ -19,7 +19,7 @@ export function upcomingWindows(location: FoodLocation, count = 3) {
   for (let i = 0; i < 15 && found.length < count; i++) {
     const date = datePlus(today, i);
     for (const window of windowsForDate(location, date)) {
-      if (i === 0 && window.end <= newYorkHour()) continue;
+      if (i === 0 && window.end * 60 <= newYorkMinutes()) continue;
       found.push({ date, window });
       if (found.length === count) break;
     }
@@ -29,7 +29,7 @@ export function upcomingWindows(location: FoodLocation, count = 3) {
 export function hasFoodToday(location: FoodLocation) {
   return (
     !location.conditionalSchedule &&
-    windowsForDate(location, today).some((w) => w.end > newYorkHour())
+    windowsForDate(location, today).some((w) => w.end * 60 > newYorkMinutes())
   );
 }
 export function validateVisit(
@@ -66,7 +66,7 @@ export function validateVisit(
     return "Arrive during a posted distribution window, at least 10 minutes before closing.";
   if (
     plan.date === today &&
-    plan.arrivalMinutes <= newYorkHour() * 60 + (plan.outboundMinutes || 0)
+    plan.arrivalMinutes <= newYorkMinutes() + (plan.outboundMinutes || 0)
   )
     return "There is not enough time to reach this visit today. Choose a later arrival or another date.";
   if (location.sourceKind === "public" && !plan.providerConfirmed)

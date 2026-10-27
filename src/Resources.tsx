@@ -91,7 +91,7 @@ export default function Resources() {
         </p>
         <Badge>
           <ShieldCheck size={12} />
-          External resources · Separate from our demo
+          Official benefits and food resources
         </Badge>
       </div>
       <div className="urgent-resource">
@@ -101,8 +101,9 @@ export default function Resources() {
         <div>
           <h2>Need food today?</h2>
           <p>
-            Our demo locations are fictional. For real food resources, use the
-            official NYC Food Help map or call NYC 311.
+            Check the latest listings on the official NYC Food Help map or call
+            NYC 311. Contact a program before traveling to confirm today’s
+            hours.
           </p>
         </div>
         <a

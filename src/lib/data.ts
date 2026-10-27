@@ -38,6 +38,18 @@ export function newYorkHour(now = new Date()) {
     }).format(now),
   );
 }
+export function newYorkMinutes(now = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    hour: "numeric",
+    minute: "numeric",
+    hourCycle: "h23",
+  }).formatToParts(now);
+  return (
+    Number(parts.find((p) => p.type === "hour")?.value) * 60 +
+    Number(parts.find((p) => p.type === "minute")?.value)
+  );
+}
 export function shiftHasEnded(
   shift: Pick<Opportunity, "date" | "end">,
   now = new Date(),
