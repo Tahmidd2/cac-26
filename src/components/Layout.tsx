@@ -52,13 +52,13 @@ export default function Layout() {
             aria-label="Main navigation"
           >
             <NavLink onClick={() => setMenu(false)} to="/find-food">
-              Find food
+              Find Food
             </NavLink>
             <NavLink onClick={() => setMenu(false)} to="/volunteer">
               Volunteer
             </NavLink>
             <NavLink onClick={() => setMenu(false)} to="/organizations">
-              For organizations
+              Organizations
             </NavLink>
             <NavLink onClick={() => setMenu(false)} to="/resources">
               Resources
@@ -66,13 +66,13 @@ export default function Layout() {
           </nav>
           <div className="nav-actions">
             <Link className="plan-link" to="/my-plan">
-              My plan{state.plans.length > 0 && <b>{state.plans.length}</b>}
+              My Plan{state.plans.length > 0 && <b>{state.plans.length}</b>}
             </Link>
             <button className="role-button" onClick={() => setRoleOpen(true)}>
-              Explore the demo
+              Demo Roles
             </button>
-            <Link className="nav-cta" to="/find-food">
-              Find food
+            <Link className="nav-cta" to="/find-food?today=true">
+              Open Today
             </Link>
             <button
               className="menu-toggle icon-button"
@@ -96,15 +96,15 @@ export default function Layout() {
       <footer className="site-footer">
         <div className="footer-cta">
           <div>
-            <h2>Good food is closer than you think.</h2>
+            <h2>Find Free Food Near You</h2>
             <p>
-              Search {directoryMetadata.count} free food programs across all
-              five boroughs. No account, no sign-up.
+              {directoryMetadata.count} programs across all five boroughs. No
+              account required.
             </p>
           </div>
           <div className="footer-cta-actions">
             <Link className="button button-light" to="/find-food">
-              Find food near me
+              Find Food
             </Link>
             <Link className="button button-ghost-light" to="/volunteer">
               Volunteer
@@ -116,72 +116,69 @@ export default function Layout() {
           <div>
             <Brand />
             <p>
-              Good food, within reach.
+              Free food resources for
               <br />
-              New York, together.
+              New York City.
             </p>
           </div>
           <div>
-            <h4>For your everyday</h4>
-            <Link to="/find-food">Find food near you</Link>
-            <Link to="/find-food/match">Help me find a fit</Link>
-            <Link to="/my-plan">My food plan</Link>
+            <h4>Find Food</h4>
+            <Link to="/find-food">Search Programs</Link>
+            <Link to="/find-food/match">Get Matched</Link>
+            <Link to="/my-plan">My Plan</Link>
           </div>
           <div>
-            <h4>For your community</h4>
-            <Link to="/volunteer">Ways to volunteer</Link>
-            <Link to="/organizations">Organization workspace</Link>
-            <Link to="/volunteer/dashboard">My volunteer schedule</Link>
+            <h4>Get Involved</h4>
+            <Link to="/volunteer">Volunteer</Link>
+            <Link to="/organizations">Organization Workspace</Link>
+            <Link to="/volunteer/dashboard">My Schedule</Link>
           </div>
           <div>
-            <h4>A little more support</h4>
-            <Link to="/resources">Food & benefits resources</Link>
+            <h4>Support</h4>
+            <Link to="/resources">Food & Benefits</Link>
             <Link to="/resources#accessibility">Accessibility</Link>
-            <Link to="/auth">Explore demo roles</Link>
+            <Link to="/auth">Demo Roles</Link>
           </div>
         </div>
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} Nourish</span>
           <p>
-            Food listings are sourced from NYC Food Help. Organization accounts,
-            volunteer signups, and assistance coordination are demonstrations.
+            Listings sourced from NYC Food Help. Volunteer and organization
+            features are demonstrations.
           </p>
         </div>
       </footer>
       <nav className="bottom-nav" aria-label="Mobile quick navigation">
-        <NavLink to="/find-food">Find food</NavLink>
+        <NavLink to="/find-food">Find Food</NavLink>
         <NavLink to="/volunteer">Volunteer</NavLink>
         <NavLink to="/my-plan">
-          My plan{state.plans.length > 0 && <span>{state.plans.length}</span>}
+          My Plan{state.plans.length > 0 && <span>{state.plans.length}</span>}
         </NavLink>
-        <button onClick={() => setRoleOpen(true)}>Demo roles</button>
+        <button onClick={() => setRoleOpen(true)}>Demo Roles</button>
       </nav>
       {roleOpen && (
-        <Modal
-          title="A community, connected."
-          onClose={() => setRoleOpen(false)}
-        >
+        <Modal title="Choose a Demo Role" onClose={() => setRoleOpen(false)}>
           <p className="muted">
-            Find real public food listings, or try the connected volunteer and
-            organization demonstrations.
+            Food listings are real. Volunteer and organization features are
+            demonstrations.
           </p>
           <div className="role-choices">
             {(
               [
                 [
                   "Family",
-                  "Find food & plan a visit",
-                  "Explore public NYC listings and build your personal food plan.",
+                  "Find Food & Plan a Visit",
+                  "Search NYC listings and build a personal food plan.",
                 ],
                 [
                   "Volunteer",
-                  "Share your time",
-                  "Try volunteer discovery, signup, and your sample schedule.",
+                  "Volunteer",
+                  "Browse opportunities, sign up, and view a sample schedule.",
                 ],
                 [
                   "Organization",
-                  "Support your neighborhood",
-                  "Manage the sample pantry, shifts, and assistance workflow.",
+                  "Manage an Organization",
+                  "Manage a sample pantry, shifts, and assistance requests.",
                 ],
               ] as const
             ).map(([role, title, description]) => (
@@ -196,9 +193,8 @@ export default function Layout() {
           </div>
           <div className="notice">
             <p>
-              No real account is created, messages are not sent, and no food or
-              assistance is reserved. Personal plans and demo changes stay in
-              this browser.
+              No account is created and nothing is sent. All data stays in this
+              browser.
             </p>
           </div>
           <Link
@@ -206,7 +202,7 @@ export default function Layout() {
             to="/auth"
             onClick={() => setRoleOpen(false)}
           >
-            Preview sign in
+            Preview Sign-In
           </Link>
         </Modal>
       )}

@@ -84,24 +84,22 @@ export default function Matching({
         <span className="match-symbol">
           {volunteer ? <Heart size={26} /> : <Sparkles size={26} />}
         </span>
-        <span className="eyebrow">
-          A LITTLE ABOUT YOU. A BETTER PLACE TO START.
-        </span>
+        <span className="eyebrow">GET MATCHED</span>
         <h1>
           {step === 3
             ? volunteer
-              ? "Your time, well spent."
-              : "Your best food options this week."
+              ? "Your Volunteer Matches"
+              : "Your Best Options This Week"
             : volunteer
-              ? "Find your way to give back."
-              : "Let’s find what works for you."}
+              ? "Find a Volunteer Shift"
+              : "Find Food That Fits"}
         </h1>
         <p>
           {step === 3
-            ? "A thoughtful shortlist, with the reasons behind every match."
+            ? "Ranked by fit, with the reason for each match."
             : volunteer
-              ? "A few quick questions to connect your time with your community."
-              : "Food that fits your schedule, your journey, and your everyday needs."}
+              ? "Answer a few questions to see shifts that fit."
+              : "Answer a few questions to see programs that fit your schedule and needs."}
         </p>
       </div>
       {step < 3 ? (
@@ -124,7 +122,7 @@ export default function Matching({
                 <div className="section-kicker">
                   <MapPin size={18} /> START CLOSE TO HOME
                 </div>
-                <h2>Where should we look?</h2>
+                <h2>Location</h2>
                 <p className="muted">
                   A neighborhood is plenty. No precise address needed.
                 </p>
@@ -470,7 +468,7 @@ export default function Matching({
               </p>
             </div>
             <button className="text-link" onClick={() => setStep(0)}>
-              Adjust preferences
+              Adjust Preferences
               <ArrowLeft size={14} />
             </button>
           </div>
@@ -515,7 +513,7 @@ export default function Matching({
                         className="button button-primary button-small"
                         to={`/volunteer/${o.id}`}
                       >
-                        View opportunity
+                        View Opportunity
                       </Link>
                     </div>
                   </article>
@@ -573,7 +571,7 @@ export default function Matching({
                 </article>
               ))}
           {(volunteer ? !volunteerResults.length : !foodResults.length) && (
-            <Empty title="Let’s try a little more flexibility.">
+            <Empty title="No Matches Found">
               <p>
                 No demo locations meet these constraints. Try another day, a
                 wider travel limit, or fewer requirements.
@@ -582,7 +580,7 @@ export default function Matching({
                 className="button button-primary"
                 onClick={() => setStep(0)}
               >
-                Adjust my preferences
+                Adjust Preferences
               </button>
               <a
                 className="text-link"
@@ -590,7 +588,7 @@ export default function Matching({
                 target="_blank"
                 rel="noreferrer"
               >
-                Explore real NYC food resources
+                NYC Food Resources
               </a>
             </Empty>
           )}

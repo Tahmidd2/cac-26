@@ -20,16 +20,15 @@ function NetworkAtlas() {
     <section className="network-section" id="our-neighborhoods">
       <div className="network-content">
         <Reveal>
-          <p className="page-context">A bigger neighborhood</p>
+          <p className="page-context">Citywide Coverage</p>
           <h2>
-            Good people.
+            Food Programs in
             <br />
-            All over New York.
+            Every Borough
           </h2>
           <p>
-            Pantries, community kitchens, and a place to start in every borough.
-            Explore {directoryMetadata.count} publicly listed food programs,
-            with source information you can check.
+            Browse {directoryMetadata.count} food pantries and community
+            kitchens from the official NYC Food Help directory.
           </p>
         </Reveal>
         <div className="borough-list">
@@ -61,13 +60,16 @@ function NetworkAtlas() {
           className="button button-primary"
           to={`/find-food${active === "All five boroughs" ? "" : `?area=${encodeURIComponent(active)}`}`}
         >
-          Explore {active === "All five boroughs" ? "the directory" : active}
+          View{" "}
+          {active === "All five boroughs"
+            ? "All Programs"
+            : `${active} Programs`}
         </Link>
       </div>
       <Reveal className="network-atlas">
         <div className="atlas-header">
           <span>{active}</span>
-          <span>{count} public programs</span>
+          <span>{count} Programs</span>
         </div>
         <div className="atlas-map-frame">
           <svg
@@ -163,12 +165,7 @@ function NetworkAtlas() {
             </div>
           )}
         </div>
-        <p>
-          Each dot is a public food-program location.
-          <br />
-          Programs: NYC Food Help. Borough outlines: NYC Department of City
-          Planning. Confirm before visiting.
-        </p>
+        <p>Sources: NYC Food Help, NYC Department of City Planning.</p>
       </Reveal>
     </section>
   );
@@ -190,30 +187,20 @@ function JourneyStory() {
     root.querySelectorAll("[data-step]").forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
-  const headings = [
-    "A place that works for you.",
-    "A journey you can make.",
-    "Good food, brought home.",
-  ];
+  const headings = ["Find a Program", "Plan the Trip", "Track Your Visit"];
   return (
     <section className="journey-story" ref={section} id="how-it-works">
       <div className="journey-story-visual">
-        <p className="page-context">The whole journey matters</p>
+        <p className="page-context">How It Works</p>
         <h2>
-          Finding food
+          From Search
           <br />
-          is the beginning.
+          to Pickup
         </h2>
         <div className="journey-visual-card" data-phase={active}>
           <div className="journey-phase">
             <span>{active + 1} / 3</span>
-            <strong>
-              {
-                ["Find your place", "Work out the trip", "Keep the plan"][
-                  active
-                ]
-              }
-            </strong>
+            <strong>{["Find", "Travel", "Collect"][active]}</strong>
           </div>
           <svg viewBox="0 0 430 280" aria-hidden="true">
             <path
@@ -244,9 +231,9 @@ function JourneyStory() {
             <p>
               {
                 [
-                  "Posted hours and practical details. One useful shortlist.",
-                  "A starting point, a street route, and a time to leave.",
-                  "Your itinerary, checklist, and pickup record in one place.",
+                  "Hours, eligibility, and contact details.",
+                  "Walking, driving, or transit directions.",
+                  "Itinerary, checklist, and pickup record.",
                 ][active]
               }
             </p>
@@ -256,21 +243,21 @@ function JourneyStory() {
       <div className="journey-story-steps">
         {[
           {
-            title: "Start with your neighborhood.",
-            body: "Search by ZIP code or neighborhood. See the food programs nearby, read their posted hours, and call to check what you need. No account or proof of need required.",
-            link: "Find food near me",
+            title: "Search Near You",
+            body: "Enter a ZIP code or neighborhood to see nearby programs, their posted hours, and how to contact them. No account required.",
+            link: "Find Food",
             to: "/find-food",
           },
           {
-            title: "Know how you’ll get there.",
-            body: "Choose a day that works. Retrieve a walking or driving route, or check a real transit itinerary. See when to leave, the trip home, and what to bring.",
-            link: "Find a place & plan a visit",
+            title: "Plan Your Trip",
+            body: "Pick a day, get walking, driving, or transit directions, and see when to leave and what to bring.",
+            link: "Plan a Visit",
             to: "/find-food",
           },
           {
-            title: "Have one less thing to remember.",
-            body: "Save your visit, add it to your calendar, and keep a simple checklist. After the visit, record whether you brought food home—or find another option if plans changed.",
-            link: "See my food plan",
+            title: "Keep Track",
+            body: "Save visits, add them to your calendar, and record each pickup. If plans change, find another option.",
+            link: "View My Plan",
             to: "/my-plan",
           },
         ].map((s, i) => (
@@ -305,17 +292,17 @@ export default function Home() {
         </div>
         <div className="hero-copy">
           <p className="hero-location">
-            <span className="live-dot" /> {directoryMetadata.count} free food
-            programs across NYC
+            <span className="live-dot" /> {directoryMetadata.count} Free Food
+            Programs Across NYC
           </p>
           <h1>
-            Good food.
+            Free Food,
             <br />
-            For all of us.
+            Close to Home.
           </h1>
           <p className="hero-description">
-            Find a nearby pantry, work out the trip, and get food home. A little
-            more support, right in your neighborhood.
+            Find food pantries and community kitchens near you, check their
+            hours, and plan your visit.
           </p>
           <form
             className="hero-search"
@@ -326,21 +313,21 @@ export default function Home() {
               );
             }}
           >
-            <label htmlFor="hero-area">Start where you are</label>
+            <label htmlFor="hero-area">ZIP Code or Neighborhood</label>
             <div>
               <Search size={20} />
               <input
                 id="hero-area"
                 value={area}
                 onChange={(e) => setArea(e.target.value)}
-                placeholder="Your ZIP code or neighborhood"
-                aria-label="Your ZIP code or neighborhood"
+                placeholder="e.g. 11372 or Astoria"
+                aria-label="ZIP code or neighborhood"
               />
               <Link
                 className="hero-geo"
                 to="/find-food?locate=1"
-                aria-label="Use my location"
-                title="Use my location"
+                aria-label="Use My Location"
+                title="Use My Location"
               >
                 <LocateFixed size={18} />
               </Link>
@@ -354,7 +341,7 @@ export default function Home() {
               className="button button-primary button-lg"
               to="/find-food?today=true"
             >
-              Find food open today <ArrowRight size={18} />
+              Find Food Open Today <ArrowRight size={18} />
             </Link>
             <Link className="button button-outline button-lg" to="/volunteer">
               <HeartHandshake size={18} /> Volunteer
@@ -362,13 +349,13 @@ export default function Home() {
           </div>
           <ul className="hero-trust">
             <li>
-              <b>{directoryMetadata.count}</b> public programs
+              <b>{directoryMetadata.count}</b> Programs
             </li>
             <li>
-              <b>5</b> boroughs
+              <b>5</b> Boroughs
             </li>
             <li>
-              <b>0</b> sign-ups needed
+              <b>0</b> Sign-Ups Required
             </li>
           </ul>
         </div>
@@ -380,18 +367,10 @@ export default function Home() {
               fetchPriority="high"
             />
           </div>
-          <div className="hero-image-caption">
-            <span className="caption-rule" />
-            <p>
-              More than a bag of groceries.
-              <br />A little connection.
-            </p>
-          </div>
-          <span className="hero-photo-credit">Created for Nourish</span>
         </div>
       </section>
       <div className="home-local-nav">
-        <span>Right around your corner.</span>
+        <span>Browse by Borough</span>
         <nav aria-label="Find food by borough">
           {boroughs.map((b) => (
             <Link key={b} to={`/find-food?area=${encodeURIComponent(b)}`}>
@@ -400,7 +379,7 @@ export default function Home() {
           ))}
         </nav>
         <Link className="food-today-link" to="/find-food?today=true">
-          Need food today?
+          Open Today
         </Link>
       </div>
       <JourneyStory />
@@ -414,40 +393,37 @@ export default function Home() {
           />
         </Reveal>
         <Reveal className="give-back-copy" delay={100}>
-          <p className="page-context">There’s room for you here, too.</p>
+          <p className="page-context">Volunteer</p>
           <h2>
-            Your Saturday.
+            Give a Few Hours
             <br />
-            Someone’s better week.
+            to Your Neighbors
           </h2>
           <p>
-            A few hours packing groceries, sharing a meal, or helping a neighbor
-            find their way. Discover a way to give back that fits your life.
+            Pack groceries, serve meals, or help with distribution at food
+            programs near you.
           </p>
           <Link className="button button-primary" to="/volunteer">
-            Find a way to help
+            Find Opportunities
           </Link>
-          <small>
-            Volunteer discovery and signups are a working demonstration.
-          </small>
         </Reveal>
       </section>
       <section className="partner-section">
         <Reveal>
-          <p className="page-context">For the people who bring us together</p>
+          <p className="page-context">For Organizations</p>
           <h2>
-            You bring the care.
+            Tools for Food
             <br />
-            We help connect it.
+            Programs
           </h2>
         </Reveal>
         <Reveal delay={120}>
           <p>
-            Keep distributions clear, bring a few more volunteers on board, and
-            help your community take the next step. One connected workspace.
+            Publish schedules, recruit volunteers, and manage requests from one
+            workspace.
           </p>
           <Link className="button button-outline" to="/organizations">
-            Explore the organization workspace
+            Open the Workspace
           </Link>
         </Reveal>
       </section>

@@ -62,7 +62,7 @@ export function OpportunityCard({
           {o.priority ? (
             <>
               <Flame size={11} />
-              Priority · Demo
+              Priority
             </>
           ) : (
             o.activity
@@ -112,7 +112,7 @@ export function OpportunityCard({
           )}
         </span>
         <Link className="text-link" to={`/volunteer/${o.id}`}>
-          View shift
+          View Shift
         </Link>
       </div>
     </article>
@@ -151,24 +151,20 @@ export default function Volunteer() {
       <section className="volunteer-hero section">
         <div>
           <div className="eyebrow">
-            <Heart size={13} /> MAKE A LITTLE ROOM FOR GOOD
+            <Heart size={13} /> VOLUNTEER
           </div>
           <h1>
-            Your time.
+            Volunteer With
             <br />
-            Someone’s better day.
+            Local Food Programs
           </h1>
-          <p>
-            Find where you’re needed. Discover nearby opportunities
-            <br className="desktop-break" /> that fit your schedule, your
-            skills, and your heart.
-          </p>
+          <p>Find shifts near you that fit your schedule and skills.</p>
           <Link className="button button-primary" to="/volunteer/match">
             <Sparkles size={16} />
-            Find my volunteer match
+            Get Matched
           </Link>
           <Link className="text-link" to="/volunteer/dashboard">
-            My volunteer schedule
+            My Schedule
           </Link>
         </div>
         <div className="volunteer-hero-photo">
@@ -176,10 +172,6 @@ export default function Volunteer() {
             src={volunteerPhoto}
             alt="Neighbors working together to distribute food"
           />
-          <div className="volunteer-photo-note">
-            <Heart size={18} />
-            <span>No act of kindness is ever too small.</span>
-          </div>
         </div>
       </section>
       <section className="section volunteer-discovery">
@@ -245,13 +237,13 @@ export default function Volunteer() {
             className="button button-outline button-small"
             onClick={() => setMore(!more)}
           >
-            More filters
+            More Filters
           </button>
         </div>
         {more && (
           <div className="volunteer-extra-filters">
             <label className="field">
-              Maximum duration
+              Max Duration
               <select
                 value={duration}
                 onChange={(e) => setDuration(Number(e.target.value))}
@@ -263,7 +255,7 @@ export default function Volunteer() {
               </select>
             </label>
             <label className="field">
-              Your age
+              Age
               <input
                 type="number"
                 min="10"
@@ -273,7 +265,7 @@ export default function Volunteer() {
               />
             </label>
             <label className="field">
-              Skills & travel
+              Skills & Travel
               <select value={skill} onChange={(e) => setSkill(e.target.value)}>
                 <option>No preference</option>
                 <option>No driving</option>
@@ -287,7 +279,7 @@ export default function Volunteer() {
                 checked={accessible}
                 onChange={(e) => setAccessible(e.target.checked)}
               />
-              Accessible activity
+              Accessible
             </label>
             <label className="checkbox-label">
               <input
@@ -309,19 +301,17 @@ export default function Volunteer() {
         )}
         <div className="demo-label standalone">
           <Info size={12} />
-          All organizations, priorities, and open slots are fictional. Signups
-          are simulations.
+          Volunteer listings are sample data for demonstration.
         </div>
         {urgent.length > 0 && (
           <section className="most-needed">
             <div className="section-heading">
               <div>
                 <div className="eyebrow">
-                  <Flame size={14} /> SMALL COMMITMENT. MEANINGFUL DIFFERENCE.
+                  <Flame size={14} /> HIGH PRIORITY
                 </div>
-                <h2>Where a little help matters most.</h2>
+                <h2>Most Needed This Week</h2>
               </div>
-              <Badge tone="amber">Organization-marked priority · Demo</Badge>
             </div>
             <div className="opportunity-grid">
               {urgent.map(({ opportunity: o, organization: l }) => (
@@ -335,16 +325,14 @@ export default function Volunteer() {
             </div>
             <p className="urgency-explanation">
               <Info size={12} />
-              Ranked by organization-posted priority, remaining positions, and
-              distance. This is illustrative need, not live staffing
-              information.
+              Ranked by priority, open spots, and distance.
             </p>
           </section>
         )}
         <div className="section-heading all-opportunities-heading">
           <div>
-            <span className="eyebrow">GOOD THINGS HAPPEN WHEN WE SHOW UP</span>
-            <h2>Find your next meaningful few hours.</h2>
+            <span className="eyebrow">ALL OPPORTUNITIES</span>
+            <h2>Browse Shifts</h2>
           </div>
           <span className="small muted">
             {results.length} matching opportunities
@@ -356,7 +344,7 @@ export default function Volunteer() {
           ))}
         </div>
         {!results.length && (
-          <Empty title="A different day could make all the difference.">
+          <Empty title="No Matching Shifts">
             <p>Try a wider radius, a different day, or fewer filters.</p>
             <button
               className="button button-primary"
@@ -374,7 +362,7 @@ export default function Volunteer() {
                 setQuery("11372");
               }}
             >
-              Reset filters
+              Reset Filters
             </button>
           </Empty>
         )}
@@ -394,9 +382,9 @@ export function VolunteerDetail() {
   const l = state.locations.find((l) => l.id === o?.orgId);
   if (!o || !l)
     return (
-      <Empty title="This opportunity isn’t available.">
+      <Empty title="Opportunity Not Found">
         <Link to="/volunteer" className="button button-primary">
-          Explore opportunities
+          Browse Opportunities
         </Link>
       </Empty>
     );
@@ -405,16 +393,13 @@ export function VolunteerDetail() {
     <section className="content-page detail-page">
       <Link className="back-link" to="/volunteer">
         <ArrowLeft size={14} />
-        All volunteer opportunities
+        All Opportunities
       </Link>
       <div className="detail-heading">
         <div>
           <div className="card-badges">
             <Badge tone={o.priority ? "amber" : "green"}>
-              {o.priority
-                ? "Organization-marked priority"
-                : "Community opportunity"}{" "}
-              · Demo
+              {o.priority ? "High Priority" : "Community Opportunity"} · Demo
             </Badge>
             <Badge tone="gray">{o.activity}</Badge>
           </div>
@@ -430,12 +415,11 @@ export function VolunteerDetail() {
           src={volunteerPhoto}
           alt="Community volunteers sharing their time"
         />
-        <span className="badge badge-white">A LITTLE TIME. A LOT OF CARE.</span>
       </div>
       <div className="detail-layout">
         <div>
           <section className="detail-section">
-            <h2>A few hours that mean something.</h2>
+            <h2>About This Shift</h2>
             <p>{o.description}</p>
             <div className="volunteer-facts">
               <span>
@@ -448,9 +432,7 @@ export function VolunteerDetail() {
               <span>
                 <Clock3 size={20} />
                 <strong>{o.end - o.start} hours</strong>
-                <small>
-                  {o.recurring ? "Recurring opportunity" : "One-time shift"}
-                </small>
+                <small>{o.recurring ? "Recurring" : "One-time shift"}</small>
               </span>
               <span>
                 <Users size={20} />
@@ -462,7 +444,7 @@ export function VolunteerDetail() {
           <section className="detail-section">
             <h2>
               <Check size={21} />
-              What to know before you come
+              Before You Arrive
             </h2>
             <div className="preparation-list">
               <span>
@@ -478,8 +460,8 @@ export function VolunteerDetail() {
               <span>
                 <Accessibility size={14} />
                 {o.accessible
-                  ? "Accessible activity and entrance in demo data"
-                  : "Physical access needs confirmation"}
+                  ? "Accessible activity and entrance"
+                  : "Confirm access with the organization"}
               </span>
               <span>
                 <Users size={14} />
@@ -492,7 +474,7 @@ export function VolunteerDetail() {
           <section className="detail-section">
             <h2>
               <MapPin size={21} />
-              The place you’ll be helping
+              Location
             </h2>
             <p>
               {l.name}
@@ -500,15 +482,11 @@ export function VolunteerDetail() {
               {l.address}, {l.borough}, NY {l.zip}
             </p>
             <Link className="text-link" to={`/food/${l.id}`}>
-              Meet the demo organization
+              View Organization
             </Link>
             <div className="notice">
               <Info size={16} />
-              <p>
-                This organization is fictional. Demo signup does not register
-                you for a real shift. No contact details or identifying
-                information are collected.
-              </p>
+              <p>Sample organization. Signups are not sent anywhere.</p>
             </div>
           </section>
         </div>
@@ -516,7 +494,7 @@ export function VolunteerDetail() {
           <div className="visit-card">
             <Badge>
               <Heart size={12} />
-              YOUR NEXT GOOD THING
+              SHIFT DETAILS
             </Badge>
             <h2>{formatDate(o.date)}</h2>
             <p>
@@ -526,15 +504,12 @@ export function VolunteerDetail() {
               <span style={{ width: `${(o.filled / o.capacity) * 100}%` }} />
             </div>
             <p className="small">
-              {o.filled} of {o.capacity} demo positions filled
+              {o.filled} of {o.capacity} spots filled
             </p>
             {o.priority && (
               <div className="notice">
                 <Flame size={15} />
-                <p>
-                  High priority, marked by the demo organization.{" "}
-                  {o.capacity - o.filled} positions still need a hand.
-                </p>
+                <p>High priority: {o.capacity - o.filled} spots still open.</p>
               </div>
             )}
             <button
@@ -550,35 +525,33 @@ export function VolunteerDetail() {
               {registered ? (
                 <>
                   <Check size={16} />
-                  You’re in the demo schedule
+                  Signed Up
                 </>
               ) : !o.active ? (
-                "Opportunity closed"
+                "Closed"
               ) : o.filled >= o.capacity ? (
-                "Shift full"
+                "Full"
               ) : shiftHasEnded(o) ? (
-                "Shift has passed"
+                "Shift Ended"
               ) : (
-                <>Count me in · Demo signup</>
+                <>Sign Up</>
               )}
             </button>
             <Link
               to="/volunteer/dashboard"
               className="button button-outline button-full"
             >
-              My volunteer schedule
+              My Schedule
               <CalendarDays size={15} />
             </Link>
-            <small>No real signup is sent.</small>
           </div>
           <div className="verification-card">
             <ShieldCheck size={22} />
             <div>
-              <strong>Organization-led, always.</strong>
+              <strong>Organization-Approved</strong>
               <p>
-                Any delivery role requires separate organizational approval.
-                Household details are never shared with volunteers in this
-                prototype.
+                Delivery roles require organization approval. Household details
+                are never shared with volunteers.
               </p>
             </div>
           </div>
@@ -586,24 +559,19 @@ export function VolunteerDetail() {
       </div>
       {signup && (
         <Modal
-          title={
-            done
-              ? "A little kindness, on the calendar."
-              : "Ready to make a little difference?"
-          }
+          title={done ? "You’re Signed Up" : "Confirm Signup"}
           onClose={() => setSignup(false)}
         >
           {done ? (
             <>
-              <Success title="You’re on the demo team.">
-                Your shift is in your schedule and the organization’s staffing
-                count has been updated. No real signup was sent.
+              <Success title="Shift Added">
+                This shift is now in your schedule.
               </Success>
               <Link
                 className="button button-primary button-full"
                 to="/volunteer/dashboard"
               >
-                See my schedule
+                View Schedule
               </Link>
             </>
           ) : (
@@ -626,7 +594,7 @@ export function VolunteerDetail() {
                     return;
                   }
                   if (!consent) {
-                    setError("Please acknowledge the demo requirements.");
+                    setError("Please confirm you meet the requirements.");
                     return;
                   }
                   try {
@@ -667,7 +635,7 @@ export function VolunteerDetail() {
                     checked={consent}
                     onChange={(e) => setConsent(e.target.checked)}
                   />
-                  I meet the requirements and understand this is a demo signup.
+                  I meet the requirements for this shift.
                 </label>
                 {error && (
                   <p className="error-text" role="alert">
@@ -678,7 +646,7 @@ export function VolunteerDetail() {
                   type="submit"
                   className="button button-primary button-full"
                 >
-                  Confirm demo signup
+                  Confirm Signup
                 </button>
               </form>
             </>
@@ -705,50 +673,41 @@ export function VolunteerDashboard() {
       <div className="page-intro">
         <div>
           <span className="eyebrow">GOOD THINGS, ON THE CALENDAR</span>
-          <h1>You’re part of something good.</h1>
-          <p>
-            Your volunteer commitments, with everything you need to show up.
-          </p>
+          <h1>My Volunteer Schedule</h1>
+          <p>Your upcoming shifts and hours.</p>
         </div>
         <Link className="button button-primary" to="/volunteer">
-          Find another way to help
+          Find More Shifts
         </Link>
       </div>
       <div className="dashboard-stats">
         <article>
-          <span>UPCOMING DEMO SHIFTS</span>
+          <span>UPCOMING SHIFTS</span>
           <strong>{signups.length}</strong>
-          <p>A little time, thoughtfully given.</p>
         </article>
         <article>
-          <span>HOURS COMMITTED · DEMO</span>
+          <span>HOURS COMMITTED</span>
           <strong>
             {hours}
             <small> hrs</small>
           </strong>
-          <p>Time that could make a difference.</p>
         </article>
         <article>
-          <span>COMMUNITY CONNECTIONS</span>
+          <span>ORGANIZATIONS</span>
           <strong>
             {new Set(signups.map((s) => s.opportunity.orgId)).size}
           </strong>
-          <p>Fictional organizations you’re helping.</p>
         </article>
       </div>
       <h2 className="subheading">
         <CalendarDays size={21} />
-        Your demo schedule
+        Upcoming
       </h2>
       {!signups.length ? (
-        <Empty title="Your next good thing is out there.">
-          <p>
-            Choose a volunteer shift and complete a demo signup.
-            <br />
-            We’ll put the details right here.
-          </p>
+        <Empty title="No Shifts Yet">
+          <p>Sign up for a shift and it will appear here.</p>
           <Link className="button button-primary" to="/volunteer">
-            Explore volunteer opportunities
+            Browse Opportunities
           </Link>
         </Empty>
       ) : (
@@ -773,7 +732,7 @@ export function VolunteerDashboard() {
                 <div>
                   <Badge>
                     <Check size={11} />
-                    Demo registration confirmed
+                    Confirmed
                   </Badge>
                   <h3>{o.activity}</h3>
                   <p>
@@ -782,7 +741,7 @@ export function VolunteerDashboard() {
                   <small>{o.requirements.join(" · ")}</small>
                 </div>
                 <Link to={`/volunteer/${o.id}`} className="text-link">
-                  Shift details
+                  Shift Details
                   <ChevronRight size={15} />
                 </Link>
                 <button
@@ -808,10 +767,7 @@ export function VolunteerDashboard() {
       )}
       <div className="notice">
         <Info size={17} />
-        <p>
-          All registrations are local simulations. No messages are sent, no real
-          places are booked, and no volunteer attendance has been recorded.
-        </p>
+        <p>Signups are stored in this browser only.</p>
       </div>
     </section>
   );

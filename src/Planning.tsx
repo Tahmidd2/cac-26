@@ -263,7 +263,7 @@ export function Planner({
     >
       {done ? (
         <>
-          <Success title="A plan you can take with you.">
+          <Success title="Visit Saved">
             Your visit to {l.name} is saved in this browser.{" "}
             {real
               ? "Food has not been reserved."
@@ -289,7 +289,7 @@ export function Planner({
               className="button button-primary"
               onClick={onClose}
             >
-              View my plan
+              View My Plan
             </Link>
           </div>
         </>
@@ -322,7 +322,7 @@ export function Planner({
           </ol>
           {step === 0 ? (
             <div className="planner-step">
-              <h3>Start with a time that works.</h3>
+              <h3>Choose a Time</h3>
               <p className="muted">
                 {real
                   ? "Call to confirm the published hours and pickup requirements before planning your trip."
@@ -413,7 +413,7 @@ export function Planner({
             </div>
           ) : step === 1 ? (
             <div className="planner-step">
-              <h3>Let’s work out the trip.</h3>
+              <h3>Plan the Trip</h3>
               <p className="muted">
                 Your route starts from an approximate neighborhood or ZIP-area
                 center. Your home address is not needed.
@@ -455,7 +455,7 @@ export function Planner({
               </div>
               {transport === "Public transit" ? (
                 <div className="transit-handoff">
-                  <h4>Check the actual connection.</h4>
+                  <h4>Transit Directions</h4>
                   <p>
                     Transit schedules and transfers need a current itinerary.
                     Open directions with both endpoints filled in, choose your
@@ -468,7 +468,7 @@ export function Planner({
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Open transit directions
+                    Open Transit Directions
                     <ExternalLink size={15} />
                   </a>
                   <a
@@ -477,7 +477,7 @@ export function Planner({
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Use the official MTA planner
+                    Use the MTA Trip Planner
                   </a>
                 </div>
               ) : (
@@ -505,7 +505,7 @@ export function Planner({
                       target="_blank"
                       rel="noreferrer"
                     >
-                      Open directions
+                      Open Directions
                       <ExternalLink size={14} />
                     </a>
                   </div>
@@ -630,7 +630,7 @@ export function Planner({
             </div>
           ) : (
             <div className="planner-step">
-              <h3>The plan, all in one place.</h3>
+              <h3>Your Itinerary</h3>
               <div className="trip-timeline">
                 <div>
                   <span className="timeline-point" />
@@ -717,10 +717,10 @@ export function Assistance({
     [preview, setPreview] = useState(false),
     [done, setDone] = useState(false);
   return (
-    <Modal title="A little help getting there." onClose={onClose}>
+    <Modal title="Request Assistance" onClose={onClose}>
       {done ? (
         <>
-          <Success title="Your demo request is in.">
+          <Success title="Request Submitted">
             It’s now awaiting review in the organization workspace. This
             simulation does not arrange real assistance.
           </Success>
@@ -729,7 +729,7 @@ export function Assistance({
             to="/my-plan"
             onClick={onClose}
           >
-            Track my demo request
+            Track My Request
           </Link>
         </>
       ) : (
@@ -742,7 +742,7 @@ export function Assistance({
           {preview ? (
             <>
               <div className="request-preview">
-                <h3>A quick look before you send</h3>
+                <h3>Review Your Request</h3>
                 <dl>
                   <dt>Assistance</dt>
                   <dd>{type}</dd>
@@ -848,7 +848,7 @@ export function Assistance({
                 type="submit"
                 className="button button-primary button-full"
               >
-                Preview demo request
+                Preview Request
               </button>
             </form>
           )}
@@ -876,26 +876,21 @@ export default function MyPlan() {
     <section className="content-page food-plan-page">
       <div className="page-intro">
         <div>
-          <p className="page-context">From a search to a meal</p>
-          <h1>Your food plan.</h1>
-          <p>
-            Your visits, your journey, and a little less to keep in your head.
-          </p>
+          <p className="page-context">My Plan</p>
+          <h1>Your Food Plan</h1>
+          <p>Upcoming visits, directions, and checklists.</p>
         </div>
         <Link className="button button-primary" to="/find-food">
-          Find another place
+          Find Another Place
         </Link>
       </div>
       <div className="plan-layout">
         <div>
           {!visits.length ? (
-            <Empty title="Your next visit starts here.">
-              <p>
-                Find a food program, confirm its hours, and plan your trip. Your
-                itinerary and pickup checklist will be waiting here.
-              </p>
+            <Empty title="No Visits Planned">
+              <p>Plan a visit from any listing and it will appear here.</p>
               <Link className="button button-primary" to="/find-food">
-                Explore the food directory
+                Find Food
               </Link>
             </Empty>
           ) : (
@@ -1038,7 +1033,7 @@ export default function MyPlan() {
                             target="_blank"
                             rel="noreferrer"
                           >
-                            Open directions
+                            Open Directions
                             <ExternalLink size={13} />
                           </a>
                           {l.phone && (
@@ -1070,7 +1065,7 @@ export default function MyPlan() {
                             className="text-link"
                             to={`/find-food?area=${encodeURIComponent(p.originArea || l.zip)}`}
                           >
-                            Find another food program
+                            Find Another Program
                           </Link>
                         )}
                         <button
@@ -1091,7 +1086,7 @@ export default function MyPlan() {
                         className="text-link"
                         onClick={() => setEditing(p)}
                       >
-                        Adjust visit
+                        Adjust Visit
                       </button>
                       <button
                         className="text-link"
@@ -1128,13 +1123,13 @@ export default function MyPlan() {
         <aside>
           <div className="plan-support-card">
             <Bookmark size={22} />
-            <h3>Something changed?</h3>
+            <h3>Plans Changed?</h3>
             <p>
               Food and schedules can change. Call before leaving, check your
               directions again, and keep a second option saved.
             </p>
             <Link className="text-link" to="/find-food">
-              Find another food program
+              Find Another Program
             </Link>
             <a className="text-link" href="tel:311">
               Call NYC 311
@@ -1142,7 +1137,7 @@ export default function MyPlan() {
           </div>
           {requests.length > 0 && (
             <div className="side-card">
-              <h3>Demo assistance requests</h3>
+              <h3>Assistance Requests</h3>
               <p>
                 These requests are simulated. Organization status updates appear
                 here.
@@ -1177,10 +1172,7 @@ export default function MyPlan() {
         />
       )}
       {recording && (
-        <Modal
-          title="How did your visit go?"
-          onClose={() => setRecording(null)}
-        >
+        <Modal title="Record Your Visit" onClose={() => setRecording(null)}>
           <p className="muted">
             Keep a personal record of what happened. This is not sent to the
             organization.

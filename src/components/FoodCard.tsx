@@ -91,7 +91,7 @@ export default function FoodCard({
           <span className="plain-tag">
             {l.conditionalSchedule
               ? "Schedule has conditions"
-              : "Posted hours · confirm before visiting"}
+              : "Confirm hours before visiting"}
           </span>
         ) : (
           <span className="plain-tag">Sample organization</span>
@@ -110,10 +110,10 @@ export default function FoodCard({
         <span>
           {l.sourceKind === "public"
             ? "NYC Food Help listing"
-            : "Demonstration listing"}
+            : "Sample listing"}
         </span>
         <Link className="text-link" to={link}>
-          {compact ? "Plan this visit" : "View details"}
+          {compact ? "Plan This Visit" : "View Details"}
         </Link>
       </div>
     </article>

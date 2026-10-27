@@ -167,18 +167,17 @@ export default function FindFood() {
     <>
       <div className="page-intro directory-intro">
         <div>
-          <p className="page-context">Your neighborhood food guide</p>
-          <h1>Find a place at the table.</h1>
+          <p className="page-context">Food Directory</p>
+          <h1>Find Food Near You</h1>
           <p>
-            {directoryMetadata.count} public food programs across all five
-            boroughs. See the details, then plan your way there.
+            {directoryMetadata.count} food programs across all five boroughs.
           </p>
         </div>
         <Link
           to={`/find-food/match${scope === "demo" ? "?network=demo" : ""}`}
           className="button button-primary"
         >
-          Help me find a good fit
+          Get Matched
         </Link>
       </div>
       <section className="directory-shell">
@@ -195,7 +194,7 @@ export default function FindFood() {
               aria-label="Search ZIP code or neighborhood"
               value={area}
               onChange={(e) => setArea(e.target.value)}
-              placeholder="ZIP, neighborhood, or borough"
+              placeholder="ZIP code, neighborhood, or borough"
               list="area-suggestions"
               autoComplete="off"
             />
@@ -292,7 +291,7 @@ export default function FindFood() {
         {extra && (
           <div className="extra-filters">
             <label>
-              Dietary accommodation
+              Dietary Needs
               <select value={diet} onChange={(e) => setDiet(e.target.value)}>
                 {["Any diet", "Vegetarian", "Halal", "Kosher"].map((x) => (
                   <option key={x}>{x}</option>
@@ -300,7 +299,7 @@ export default function FindFood() {
               </select>
             </label>
             <label>
-              Language support
+              Language
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
@@ -319,8 +318,8 @@ export default function FindFood() {
                   setLimit(20);
                 }}
               >
-                <option value="public">Public NYC listings</option>
-                <option value="demo">Sample organizations</option>
+                <option value="public">NYC Public Listings</option>
+                <option value="demo">Sample Organizations</option>
               </select>
             </label>
             <button
@@ -334,13 +333,12 @@ export default function FindFood() {
                 setRadius("5");
               }}
             >
-              Reset filters
+              Reset Filters
               <X size={13} />
             </button>
             <p>
-              Public listings do not confirm dietary, access, or ID requirements
-              unless explicitly stated. These filters may return no public
-              matches.
+              Dietary, access, and ID details are only shown when the provider
+              lists them.
             </p>
           </div>
         )}
@@ -354,22 +352,20 @@ export default function FindFood() {
                   {results.length} {results.length === 1 ? "place" : "places"}{" "}
                   near {query}
                 </h2>
-                <p>Closest first. Posted schedules can change.</p>
+                <p>Sorted by distance</p>
               </div>
               <button className="text-link" onClick={() => setCompare(true)}>
-                Compare saved
+                Compare Saved
               </button>
             </div>
             <div className="source-note">
               {scope === "public" ? (
                 <>
                   <span className="status-dot" />
-                  NYC public directory. Call before traveling.
+                  Source: NYC Food Help. Call ahead to confirm hours.
                 </>
               ) : (
-                <>
-                  Sample organizations for exploring connected demo workflows.
-                </>
+                <>Sample organizations for demonstration.</>
               )}
             </div>
             <div className="results-list">
@@ -397,16 +393,12 @@ export default function FindFood() {
               )}
               {!results.length && (
                 <Empty
-                  title={
-                    origin
-                      ? "Let’s widen the search."
-                      : "Where in New York should we look?"
-                  }
+                  title={origin ? "No Programs Found" : "Enter a Location"}
                 >
                   <p>
                     {origin
-                      ? "Try another day, a larger radius, or fewer filters. Unknown accommodations are not treated as confirmed."
-                      : "Try a ZIP code like 11372 or 11226, a neighborhood like Harlem, or a borough like Queens."}
+                      ? "Try another day, a larger radius, or fewer filters."
+                      : "Search by ZIP code (11372), neighborhood (Harlem), or borough (Queens)."}
                   </p>
                   <button
                     className="button button-primary"
@@ -419,7 +411,7 @@ export default function FindFood() {
                       setType("All services");
                     }}
                   >
-                    Widen my search
+                    Clear Filters
                   </button>
                   <a
                     className="text-link"
@@ -427,10 +419,10 @@ export default function FindFood() {
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Open the city’s food directory
+                    NYC Food Help Directory
                   </a>
                   <a className="text-link" href="tel:311">
-                    Call NYC 311 for help
+                    Call 311
                   </a>
                 </Empty>
               )}
@@ -470,15 +462,13 @@ export default function FindFood() {
             />
             <div className="map-help-card">
               <p>
-                <strong>The whole journey matters.</strong>
-                <span>
-                  Check the hours. Plan your route. Keep your next step.
-                </span>
+                <strong>Not Sure Where to Start?</strong>
+                <span>Answer a few questions to find a good match.</span>
               </p>
               <Link
                 to={`/find-food/match${scope === "demo" ? "?network=demo" : ""}`}
               >
-                Find my fit
+                Get Matched
               </Link>
             </div>
           </div>
@@ -486,13 +476,13 @@ export default function FindFood() {
         <div className="mobile-view-switch">
           <button onClick={() => setView(view === "list" ? "map" : "list")}>
             {view === "list" ? <MapIcon size={17} /> : <List size={17} />}Show{" "}
-            {view === "list" ? "map" : "list"}
+            {view === "list" ? "Map" : "List"}
           </button>
         </div>
       </section>
       {compare && (
         <Modal
-          title="Compare your saved places"
+          title="Compare Saved Places"
           wide
           onClose={() => setCompare(false)}
         >
@@ -501,7 +491,7 @@ export default function FindFood() {
               <table className="comparison-table">
                 <thead>
                   <tr>
-                    <th>Good to know</th>
+                    <th>Notes</th>
                     {saved.map((l) => (
                       <th key={l.id}>
                         <Link to={`/food/${l.id}`}>{l.name}</Link>
@@ -549,10 +539,10 @@ export default function FindFood() {
               </table>
             </div>
           ) : (
-            <Empty title="Save a few places first.">
+            <Empty title="No Saved Places">
               <p>
-                Use the bookmark button on a location to add it to your
-                comparison. Up to four saved places appear here.
+                Save up to four places with the bookmark button to compare them
+                here.
               </p>
             </Empty>
           )}

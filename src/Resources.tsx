@@ -22,7 +22,7 @@ import type { Role } from "./lib/types";
 const resources = [
   {
     icon: ShoppingBasket,
-    title: "Find real food assistance near you",
+    title: "Food Assistance Near You",
     category: "NYC FOOD HELP",
     description:
       "Explore the official New York City food assistance map for actual food pantries and community kitchens.",
@@ -31,43 +31,43 @@ const resources = [
   },
   {
     icon: Leaf,
-    title: "Get support with everyday groceries",
+    title: "SNAP Benefits",
     category: "SNAP · NYC HRA",
     description:
       "Read official SNAP information, explore the application guide, and connect with ACCESS HRA.",
     url: "https://www.nyc.gov/site/hra/help/snap-benefits-food-program.page",
-    link: "Explore SNAP information",
+    link: "Learn About SNAP",
   },
   {
     icon: UtensilsCrossed,
-    title: "School meals, a little easier",
+    title: "Free School Meals",
     category: "NYC PUBLIC SCHOOLS",
     description:
       "Find current school meal information, menus, and food service updates from NYC Public Schools.",
     url: "https://www.schools.nyc.gov/school-life/school-meals",
-    link: "Learn about school meals",
+    link: "Learn About School Meals",
   },
   {
     icon: Baby,
-    title: "Nutrition support for growing families",
+    title: "WIC for Families",
     category: "WIC · ACCESS NYC",
     description:
       "Explore official information about WIC nutrition support and how to connect with a local program.",
     url: "https://access.nyc.gov/programs/women-infants-and-children-wic/",
-    link: "Learn about WIC",
+    link: "Learn About WIC",
   },
   {
     icon: HandHeart,
-    title: "A wider network of food support",
+    title: "Food Bank Network",
     category: "FEEDING AMERICA",
     description:
       "Use Feeding America’s food bank finder to connect with real food assistance beyond this NYC demo.",
     url: "https://www.feedingamerica.org/need-help-find-food",
-    link: "Find a food bank",
+    link: "Find a Food Bank",
   },
   {
     icon: Heart,
-    title: "A real person to help you find your way",
+    title: "Talk to Someone",
     category: "NYC 311",
     description:
       "Find food and community services through New York City’s official information service. In NYC, call 311 for help.",
@@ -79,19 +79,18 @@ export default function Resources() {
   return (
     <section className="content-page resources-page">
       <div className="resource-intro">
-        <span className="eyebrow">A LITTLE MORE SUPPORT</span>
+        <span className="eyebrow">RESOURCES</span>
         <h1>
-          You don’t have to
+          Food & Benefits
           <br />
-          figure it all out alone.
+          Resources
         </h1>
         <p>
-          A few trusted places to start. These links take you to real, official
-          services.
+          Official programs for food, nutrition, and benefits in New York City.
         </p>
         <Badge>
           <ShieldCheck size={12} />
-          Official benefits and food resources
+          Official Sources
         </Badge>
       </div>
       <div className="urgent-resource">
@@ -99,11 +98,10 @@ export default function Resources() {
           <UtensilsCrossed size={26} />
         </span>
         <div>
-          <h2>Need food today?</h2>
+          <h2>Need Food Today?</h2>
           <p>
-            Check the latest listings on the official NYC Food Help map or call
-            NYC 311. Contact a program before traveling to confirm today’s
-            hours.
+            Use the NYC Food Help map or call 311. Confirm hours before
+            traveling.
           </p>
         </div>
         <a
@@ -112,7 +110,7 @@ export default function Resources() {
           target="_blank"
           rel="noreferrer"
         >
-          Find real food assistance
+          Open NYC Food Help
         </a>
       </div>
       <div className="resource-grid">
@@ -137,27 +135,23 @@ export default function Resources() {
       <section className="accessibility-panel" id="accessibility">
         <Accessibility size={27} />
         <div>
-          <h2>Designed to welcome you.</h2>
+          <h2>Accessibility</h2>
           <p>
-            Nourish is built with keyboard navigation, visible focus indicators,
-            labeled forms, and responsive layouts. You can search without an
-            account or sharing your exact address. The prototype is currently
-            available in English. Spanish and Bengali localization are future
-            work.
+            Nourish supports keyboard navigation, visible focus, labeled forms,
+            and mobile layouts. Search without an account or your exact address.
+            Currently available in English; Spanish and Bengali are planned.
           </p>
           <p>
-            This project is a working prototype, not a service provider. No
-            food, transportation, or assistance is booked through this demo.
+            Nourish is a directory, not a service provider. Nothing is booked
+            through this site.
           </p>
         </div>
       </section>
       <div className="notice">
         <Info size={17} />
         <p>
-          Official organizations set their own eligibility, schedules, and
-          application processes. Follow the linked provider’s current guidance.
-          Nourish does not determine eligibility or collect benefit
-          applications.
+          Each organization sets its own eligibility and schedules. Nourish does
+          not determine eligibility or collect applications.
         </p>
       </div>
     </section>
@@ -173,13 +167,9 @@ export function Auth() {
       <div className="auth-story">
         <div className="eyebrow">
           <Sprout size={16} />
-          GOOD FOOD. STRONGER COMMUNITIES.
+          NOURISH
         </div>
-        <h1>
-          A place at the table.
-          <br />
-          For everyone.
-        </h1>
+        <h1>Sign In</h1>
         <p>
           Whether you need a hand or have one to offer,
           <br />
@@ -269,7 +259,7 @@ export function Auth() {
           You can switch roles any time.
         </p>
         <Link to="/" className="text-link">
-          Back to the neighborhood
+          Back to Home
         </Link>
       </div>
     </section>
@@ -281,11 +271,11 @@ export function NotFound() {
       <span className="match-symbol">
         <Sprout size={30} />
       </span>
-      <span className="eyebrow">A LITTLE OFF THE BEATEN PATH</span>
-      <h1>Let’s find your way back.</h1>
-      <p>This page isn’t here, but a good next step is.</p>
+      <span className="eyebrow">404</span>
+      <h1>Page Not Found</h1>
+      <p>The page you’re looking for doesn’t exist.</p>
       <Link className="button button-primary" to="/find-food">
-        Find nearby food
+        Find Food
       </Link>
     </section>
   );

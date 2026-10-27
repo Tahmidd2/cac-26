@@ -32,42 +32,41 @@ export default function Organizations() {
         <span className="match-symbol">
           <HandHeart size={28} />
         </span>
-        <div className="eyebrow">YOU BRING THE CARE. WE HELP CONNECT IT.</div>
+        <div className="eyebrow">FOR ORGANIZATIONS</div>
         <h1>
-          Good things grow
+          Run Your Food Program
           <br />
-          when we work together.
+          in One Place
         </h1>
         <p>
-          More than a directory. A shared space to connect the food you have,
-          <br className="desktop-break" /> the volunteers you need, and the
-          neighbors you care for.
+          Publish distribution schedules, recruit volunteers, and manage
+          assistance requests.
         </p>
         <Link
           to="/organizations/dashboard"
           className="button button-primary"
           onClick={() => update((s) => ({ ...s, role: "Organization" }))}
         >
-          Explore the organization workspace
+          Open the Workspace
         </Link>
-        <small>No sign up needed. You’re exploring a demo.</small>
+        <small>Demo workspace. No sign-up required.</small>
       </div>
       <div className="organization-features">
         {[
           [
             ShoppingBasket,
-            "Make your next distribution easier to find.",
-            "Share clear schedules, pickup requirements, and accessibility information. Your updates appear in food discovery.",
+            "Publish Distributions",
+            "Post schedules, requirements, and accessibility details. Updates appear in search.",
           ],
           [
             Users,
-            "A few more hands when you need them.",
-            "Post opportunities, explain your staffing needs, and watch sample volunteer signups update your capacity.",
+            "Recruit Volunteers",
+            "Post shifts and track signups against your staffing needs.",
           ],
           [
             HandHeart,
-            "Help the last mile feel a little shorter.",
-            "Review requests for assistance and arrange approved support through an organization-led workflow.",
+            "Manage Assistance",
+            "Review assistance requests and coordinate approved support.",
           ],
         ].map(([Icon, title, desc]) => {
           const I = Icon as typeof Users;
@@ -95,7 +94,7 @@ export default function Organizations() {
             experience, so everyone is working from the same picture.
           </p>
           <Link to="/organizations/dashboard" className="text-link">
-            Take a look around
+            Take a Look Around
           </Link>
         </div>
         <div className="preview-window">
@@ -416,11 +415,11 @@ function AvailabilityForm({ location: l }: { location: FoodLocation }) {
     >
       <div className="workspace-section-heading">
         <div>
-          <h2>Your food distribution, at a glance.</h2>
+          <h2>Distribution Overview</h2>
           <p>Changes update the family-facing demo immediately.</p>
         </div>
         <Link className="text-link" to={`/food/${l.id}`}>
-          View public demo
+          View Public Listing
         </Link>
       </div>
       <label className="field">Distribution days</label>
@@ -547,7 +546,7 @@ function AvailabilityForm({ location: l }: { location: FoodLocation }) {
           </span>
         )}
         <button className="button button-primary" type="submit">
-          Save & confirm demo information
+          Save & Confirm
           <Check size={15} />
         </button>
       </div>
@@ -581,13 +580,13 @@ export function OrganizationDashboard() {
         <div>
           <span className="eyebrow">
             <Building2 size={13} />
-            ORGANIZATION WORKSPACE · DEMO
+            ORGANIZATION WORKSPACE
           </span>
-          <h1>A good day to bring people together.</h1>
-          <p>Welcome back. Here’s what’s happening in your community.</p>
+          <h1>Dashboard</h1>
+          <p>Schedules, volunteers, and requests at a glance.</p>
         </div>
         <label className="workspace-org-select">
-          <span>YOUR DEMO ORGANIZATION</span>
+          <span>ORGANIZATION</span>
           <select value={orgId} onChange={(e) => setOrgId(e.target.value)}>
             {state.locations
               .filter((l) => l.sourceKind !== "public")
@@ -668,10 +667,10 @@ export function OrganizationDashboard() {
           <div className="workspace-overview-grid">
             <div className="workspace-panel">
               <div className="workspace-section-heading">
-                <h2>A few more hands make a difference.</h2>
+                <h2>Volunteer Shifts</h2>
                 <button className="text-link" onClick={() => setEditing("new")}>
                   <Plus size={14} />
-                  Add opportunity
+                  Add Opportunity
                 </button>
               </div>
               {active.length ? (
@@ -699,12 +698,12 @@ export function OrganizationDashboard() {
                   </div>
                 ))
               ) : (
-                <Empty title="Make room for your next team.">
+                <Empty title="No Shifts Posted">
                   <button
                     className="text-link"
                     onClick={() => setEditing("new")}
                   >
-                    Create a demo opportunity
+                    Create Opportunity
                     <Plus size={13} />
                   </button>
                 </Empty>
@@ -713,12 +712,12 @@ export function OrganizationDashboard() {
                 className="text-link"
                 onClick={() => setTab("Volunteer shifts")}
               >
-                Manage all shifts
+                Manage All Shifts
               </button>
             </div>
             <div className="workspace-panel activity-panel">
               <div className="workspace-section-heading">
-                <h2>Your community, in motion.</h2>
+                <h2>Recent Activity</h2>
               </div>
               <div className="activity-item">
                 <span>
@@ -731,7 +730,7 @@ export function OrganizationDashboard() {
                     {time(l.end)}
                   </p>
                   <Link className="text-link" to={`/food/${l.id}`}>
-                    See the family experience
+                    View Family Experience
                   </Link>
                 </div>
               </div>
@@ -766,7 +765,7 @@ export function OrganizationDashboard() {
                     className="text-link"
                     onClick={() => setTab("Assistance requests")}
                   >
-                    Review requests
+                    Review Requests
                   </button>
                 </div>
               </div>
@@ -779,7 +778,7 @@ export function OrganizationDashboard() {
         <div className="workspace-panel">
           <div className="workspace-section-heading">
             <div>
-              <h2>Good people. A shared purpose.</h2>
+              <h2>Volunteers</h2>
               <p>
                 New opportunities appear in the volunteer directory immediately.
               </p>
@@ -789,7 +788,7 @@ export function OrganizationDashboard() {
               onClick={() => setEditing("new")}
             >
               <Plus size={15} />
-              Create opportunity
+              Create Opportunity
             </button>
           </div>
           <div className="shift-table-wrap">
@@ -861,8 +860,8 @@ export function OrganizationDashboard() {
             </table>
           </div>
           {!opportunities.length && (
-            <Empty title="Your next volunteer team starts here.">
-              <p>Create a demo opportunity to welcome a few helping hands.</p>
+            <Empty title="No Volunteers Yet">
+              <p>Post a shift to start recruiting.</p>
             </Empty>
           )}
         </div>
@@ -870,7 +869,7 @@ export function OrganizationDashboard() {
         <>
           <div className="workspace-section-heading">
             <div>
-              <h2>Help the next step happen.</h2>
+              <h2>Assistance Requests</h2>
               <p>
                 Organization-reviewed support. No precise addresses or household
                 contact details.
@@ -978,10 +977,7 @@ export function OrganizationDashboard() {
         />
       )}
       {resetOpen && (
-        <Modal
-          title="Start the demo fresh?"
-          onClose={() => setResetOpen(false)}
-        >
+        <Modal title="Reset Demo Data?" onClose={() => setResetOpen(false)}>
           <p className="muted small">
             This clears saved locations, visits, signups, new opportunities, and
             assistance changes from this browser, then restores the seeded
@@ -992,7 +988,7 @@ export function OrganizationDashboard() {
               className="button button-outline"
               onClick={() => setResetOpen(false)}
             >
-              Keep exploring
+              Keep Exploring
             </button>
             <button
               className="button button-primary"

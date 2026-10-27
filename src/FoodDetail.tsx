@@ -18,9 +18,9 @@ export default function FoodDetail() {
   const l = state.locations.find((l) => l.id === id);
   if (!l)
     return (
-      <Empty title="This location is not in the directory.">
+      <Empty title="Location Not Found">
         <Link className="button button-primary" to="/find-food">
-          Find another place
+          Back to Directory
         </Link>
       </Empty>
     );
@@ -37,7 +37,7 @@ export default function FoodDetail() {
     <section className="content-page detail-page">
       <Link className="back-link" to="/find-food">
         <ArrowLeft size={16} />
-        Back to the directory
+        Back to Directory
       </Link>
       <div className="detail-heading">
         <div>
@@ -62,14 +62,14 @@ export default function FoodDetail() {
           }
         >
           <Bookmark size={18} fill={saved ? "currentColor" : "none"} />
-          {saved ? "Saved" : "Save place"}
+          {saved ? "Saved" : "Save"}
         </button>
       </div>
       <div className={`listing-provenance ${real ? "" : "demo-provenance"}`}>
         <div>
           <span className="status-dot" />
           <strong>
-            {real ? "Public NYC Food Help listing" : "Sample organization"}
+            {real ? "NYC Food Help Listing" : "Sample Organization"}
           </strong>
           <span>
             {real
@@ -79,7 +79,7 @@ export default function FoodDetail() {
         </div>
         {real && (
           <a href={l.sourceUrl} target="_blank" rel="noreferrer">
-            View the city source
+            View Source
             <ExternalLink size={14} />
           </a>
         )}
@@ -87,16 +87,16 @@ export default function FoodDetail() {
       <div className="detail-layout">
         <div>
           <section className="detail-section">
-            <h2>When to visit</h2>
+            <h2>Hours</h2>
             <p>
               {real
-                ? "These are the hours published in the city directory. Call before you leave to confirm your day, eligibility, and available food."
-                : "Choose a sample distribution to explore the complete visit workflow."}
+                ? "Hours as published in the city directory. Call ahead to confirm."
+                : "Choose a sample distribution to plan a visit."}
             </p>
             {l.conditionalSchedule && (
               <div className="notice notice-warning">
                 <p>
-                  <strong>This schedule has conditions.</strong>{" "}
+                  <strong>Schedule Note:</strong>{" "}
                   {l.scheduleNotes || l.postedSchedule} Check directly before
                   choosing a date.
                 </p>
@@ -113,7 +113,7 @@ export default function FoodDetail() {
                     }}
                   >
                     <span>
-                      {i === 0 ? "Next posted window" : "Another posted window"}
+                      {i === 0 ? "Next Distribution" : "Following Distribution"}
                     </span>
                     <strong>{formatDate(date, true)}</strong>
                     <span>
@@ -126,14 +126,13 @@ export default function FoodDetail() {
             ) : (
               <div className="notice">
                 <p>
-                  No structured hours are published for this location. Call the
-                  organization, then save the date and time you confirm in your
-                  visit plan.
+                  No hours are published for this location. Call to confirm a
+                  time.
                 </p>
               </div>
             )}
             <details className="weekly-hours">
-              <summary>See the full posted schedule</summary>
+              <summary>Full Schedule</summary>
               <div>
                 {days.map((day, i) => {
                   const rows = windows.filter((w) => w.day === i);
@@ -159,11 +158,11 @@ export default function FoodDetail() {
             </details>
           </section>
           <section className="detail-section">
-            <h2>Before you go</h2>
+            <h2>Before You Go</h2>
             <p>{l.instructions}</p>
             <div className="detail-info-grid">
               <article>
-                <h3>What to bring</h3>
+                <h3>What to Bring</h3>
                 <p>
                   {l.noId === null
                     ? "Ask whether ID, proof of address, or an appointment is needed. Bring a reusable bag if you can."
@@ -183,7 +182,7 @@ export default function FoodDetail() {
                 </p>
               </article>
               <article>
-                <h3>Dietary needs</h3>
+                <h3>Dietary Needs</h3>
                 <p>
                   {l.dietary.length
                     ? l.dietary.join(", ")
@@ -191,7 +190,7 @@ export default function FoodDetail() {
                 </p>
               </article>
               <article>
-                <h3>Step-free access</h3>
+                <h3>Accessibility</h3>
                 <p>
                   {known(
                     l.accessible,
@@ -221,11 +220,9 @@ export default function FoodDetail() {
             </div>
           </section>
           <section className="detail-section">
-            <h2>Your way there</h2>
+            <h2>Getting There</h2>
             <p>
-              Start from your neighborhood, check a route, and keep all the
-              details together. Walking and driving routes can be retrieved in
-              the planner.
+              Get walking, driving, or transit directions in the visit planner.
             </p>
             <FoodMap
               compact
@@ -235,7 +232,7 @@ export default function FoodDetail() {
             />
             <div className="detail-map-actions">
               <button className="text-link" onClick={() => setPlanning(true)}>
-                Plan the full journey
+                Plan Your Trip
               </button>
               <a
                 className="text-link"
@@ -243,7 +240,7 @@ export default function FoodDetail() {
                 target="_blank"
                 rel="noreferrer"
               >
-                Open directions
+                Open Directions
                 <ExternalLink size={14} />
               </a>
             </div>
@@ -256,13 +253,11 @@ export default function FoodDetail() {
           </section>
           {real && (
             <section className="detail-section">
-              <h2>About this information</h2>
+              <h2>About This Listing</h2>
               <p>
-                This listing was imported from the query-only public layers used
-                by NYC Food Help on{" "}
-                {l.importedAt ? formatDate(l.importedAt.slice(0, 10)) : ""}. It
-                is a directory record, not a partnership, food reservation, or
-                guarantee of service.
+                Imported from NYC Food Help on{" "}
+                {l.importedAt ? formatDate(l.importedAt.slice(0, 10)) : ""}.
+                Listing does not guarantee service or reserve food.
               </p>
               <a
                 className="text-link"
@@ -270,14 +265,14 @@ export default function FoodDetail() {
                 target="_blank"
                 rel="noreferrer"
               >
-                Inspect the source record
+                View Source Record
                 <ExternalLink size={14} />
               </a>
             </section>
           )}
           {!real && shifts.length > 0 && (
             <section className="detail-section">
-              <h2>Help out here</h2>
+              <h2>Volunteer Here</h2>
               {shifts.slice(0, 2).map((o) => (
                 <Link
                   className="related-opportunity"
@@ -299,7 +294,7 @@ export default function FoodDetail() {
         <aside className="detail-sidebar">
           <div className="visit-card">
             <p className="page-context">Your next step</p>
-            <h2>{next[0] ? formatDate(next[0].date) : "Confirm a time"}</h2>
+            <h2>{next[0] ? formatDate(next[0].date) : "Call to Confirm"}</h2>
             <p>
               {next[0]
                 ? `${time(next[0].window.start)}–${time(next[0].window.end)}`
@@ -309,7 +304,7 @@ export default function FoodDetail() {
               className="button button-primary button-full"
               onClick={() => setPlanning(true)}
             >
-              Plan my visit
+              Plan My Visit
             </button>
             {real && l.phone && (
               <a
@@ -325,29 +320,29 @@ export default function FoodDetail() {
                 className="button button-outline button-full"
                 onClick={() => setAssisting(true)}
               >
-                Request demo assistance
+                Request Assistance (Demo)
               </button>
             )}
             <p className="visit-card-note">
               {real
-                ? "A personal plan does not reserve food. Confirm directly before traveling."
+                ? "Plans do not reserve food. Confirm before traveling."
                 : "Demo visits do not reserve food or arrange real transport."}
             </p>
           </div>
           <div className="support-note">
-            <h3>Need a hand with the trip?</h3>
+            <h3>Need Help Getting There?</h3>
             <p>
               {real
-                ? "Call the provider to ask about pickup or delivery support. NYC 311 can also help you find other options."
+                ? "Ask the provider about delivery, or call 311 for other options."
                 : "Try the sample assistance flow to see how an organization can coordinate support."}
             </p>
             {real ? (
               <a className="text-link" href="tel:311">
-                Call NYC 311
+                Call 311
               </a>
             ) : (
               <Link className="text-link" to="/resources">
-                Find real support
+                More Resources
               </Link>
             )}
           </div>
