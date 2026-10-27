@@ -18,17 +18,37 @@ export interface FoodLocation {
   end: number;
   dietary: string[];
   languages: string[];
-  accessible: boolean;
-  delivery: boolean;
-  appointment: boolean;
-  noId: boolean;
+  accessible: boolean | null;
+  delivery: boolean | null;
+  appointment: boolean | null;
+  noId: boolean | null;
   verified: boolean;
   updatedAt: string;
   inventory: string[];
   instructions: string;
   image: string;
   householdLimit?: number;
+  sourceKind?: 'public' | 'demo';
+  sourceName?: string;
+  sourceUrl?: string;
+  sourceRecordUrl?: string;
+  importedAt?: string;
+  phone?: string;
+  website?: string;
+  serviceTypes?: string[];
+  weeklySchedule?: ServiceWindow[];
+  scheduleNotes?: string;
+  conditionalSchedule?: boolean;
+  postedSchedule?: string;
 }
+export interface ServiceWindow { day: number; start: number; end: number; service?: string; }
+export interface TravelStep { instruction: string; meters: number; }
+export interface TravelRoute {
+  provider: string; retrievedAt: string; mode: 'Walking' | 'Driving';
+  outboundMinutes: number; returnMinutes: number; meters: number;
+  coordinates: [number,number][]; destination: [number,number]; steps: TravelStep[];
+}
+export type VisitStatus = 'Planned' | 'On my way' | 'Collected' | 'Could not collect';
 export interface Opportunity {
   id: string;
   orgId: string;
@@ -59,6 +79,17 @@ export interface VisitPlan {
   date: string;
   transport: Transport;
   checklist: string[];
+  originArea?: string;
+  arrivalMinutes?: number;
+  windowStart?: number;
+  windowEnd?: number;
+  route?: TravelRoute;
+  outboundMinutes?: number;
+  returnMinutes?: number;
+  travelTimeSource?: 'route' | 'user' | 'unavailable';
+  providerConfirmed?: boolean;
+  status?: VisitStatus;
+  outcomeNote?: string;
 }
 export interface AssistanceRequest {
   id: string;

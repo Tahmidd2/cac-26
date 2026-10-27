@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   ArrowLeft,
   ArrowRight,
@@ -26,27 +26,20 @@ import type {
   VolunteerPreferences,
 } from "./lib/types";
 import { matchFood, matchVolunteers } from "./lib/services";
-import { days, formatDate, time, nextDay } from "./lib/data";
+import { days, formatDate, time } from "./lib/data";
 import { Badge, Empty } from "./components/ui";
 import FoodCard from "./components/FoodCard";
+import {upcomingWindows} from "./lib/schedules";
 export default function Matching({
   volunteer = false,
 }: {
   volunteer?: boolean;
 }) {
-  const { state } = useDemo();
+  const { state, journey, setJourney } = useDemo();
+  const [params] = useSearchParams();
+  const sampleNetwork = params.get("network") === "demo";
   const [step, setStep] = useState(0);
-  const [food, setFood] = useState<FoodPreferences>({
-    area: "11372",
-    household: 4,
-    day: "Wednesday",
-    period: "Afternoon",
-    transport: "Public transit",
-    maxMinutes: 45,
-    dietary: "No preference",
-    accessible: false,
-    noId: false,
-  });
+  const [food, setFood] = useState<FoodPreferences>(journey);
   const [pref, setPref] = useState<VolunteerPreferences>({
     area: "11372",
     day: "Saturday",
@@ -72,7 +65,7 @@ export default function Matching({
   ) {
     setPref((s) => ({ ...s, [key]: value }));
   }
-  const foodResults = matchFood(state.locations, food).slice(0, 5);
+  const foodResults = matchFood(state.locations.filter(l => sampleNetwork ? l.sourceKind !== "public" : l.sourceKind === "public"), food).slice(0, 5);
   const volunteerResults = matchVolunteers(
     state.opportunities,
     state.locations,
@@ -449,6 +442,7 @@ export default function Matching({
                   return;
                 }
                 setError("");
+                if (!volunteer && step === 2) setJourney(food);
                 setStep(step + 1);
               }}
             >
@@ -468,7 +462,7 @@ export default function Matching({
               <p>
                 {volunteer ? pref.area : food.area} ·{" "}
                 {volunteer ? pref.day : `${food.day} · ${food.transport}`}
-                <span>Based on explainable rules and demo information.</span>
+                <span>Based on posted hours, distance, and your preferences.</span>
               </p>
             </div>
             <button className="text-link" onClick={() => setStep(0)}>
@@ -537,7 +531,7 @@ export default function Matching({
                       distributionDate={
                         food.day === "Any day"
                           ? undefined
-                          : nextDay(days.indexOf(food.day))
+                          : upcomingWindows(r.location,15).find(v => days[v.window.day] === food.day)?.date
                       }
                       compact
                     />
@@ -599,9 +593,7 @@ export default function Matching({
           <div className="notice">
             <Info size={17} />
             <p>
-              These matches use fictional demonstration data and simple,
-              transparent rules. They do not confirm food inventory or real
-              volunteer availability.
+              Matching uses transparent rules and published information. Confirm the schedule and requirements with the provider. Volunteer opportunities and sample organizations remain simulated.
             </p>
           </div>
         </div>

@@ -1,4 +1,7 @@
 import type { FoodLocation, Opportunity, DemoState } from "./types";
+import directorySnapshot from "../data/nyc-food-directory.json";
+export const directoryMetadata = directorySnapshot.metadata;
+export const publicLocations = directorySnapshot.locations as FoodLocation[];
 export const foodPhoto =
   "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1400&q=85";
 export const volunteerPhoto =
@@ -57,11 +60,12 @@ export function formatDate(date: string, long = false) {
   });
 }
 export function time(hour: number) {
-  return `${Math.floor(hour) % 12 || 12}${hour % 1 ? ":30" : ""} ${hour >= 12 ? "PM" : "AM"}`;
+  return `${Math.floor(hour) % 12 || 12}${Math.round((hour % 1) * 60) ? ":" + String(Math.round((hour % 1) * 60)).padStart(2,"0") : ""} ${hour >= 12 ? "PM" : "AM"}`;
 }
 export function nextDistribution(l: FoodLocation) {
   const weekday = new Date(today + "T12:00:00").getDay();
   const hour = newYorkHour();
+  if (!l.days.length) return "";
   return datePlus(
     today,
     Math.min(
@@ -238,6 +242,7 @@ const names = [
 ] as const;
 export const seedLocations: FoodLocation[] = names.map((n, i) => ({
   id: `food-${i + 1}`,
+  sourceKind: "demo",
   name: n[0],
   neighborhood: n[1],
   borough: n[2],
@@ -336,9 +341,9 @@ export const seedOpportunities: Opportunity[] = Array.from(
   }),
 );
 export const initialState: DemoState = {
-  version: 1,
+  version: 2,
   role: "Family",
-  locations: seedLocations,
+  locations: [...publicLocations, ...seedLocations],
   opportunities: seedOpportunities,
   signups: [],
   plans: [],

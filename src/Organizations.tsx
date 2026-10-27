@@ -349,7 +349,7 @@ function OpportunityEditor({
           <label className="checkbox-label">
             <input
               type="checkbox"
-              checked={form.accessible}
+              checked={!!form.accessible}
               onChange={(e) => field("accessible", e.target.checked)}
             />
             Accessible activity
@@ -533,7 +533,7 @@ function AvailabilityForm({ location: l }: { location: FoodLocation }) {
           <label className="checkbox-label" key={key}>
             <input
               type="checkbox"
-              checked={form[key]}
+              checked={!!form[key]}
               onChange={(e) => field(key, e.target.checked)}
             />
             {label}
@@ -597,7 +597,7 @@ export function OrganizationDashboard() {
         <label className="workspace-org-select">
           <span>YOUR DEMO ORGANIZATION</span>
           <select value={orgId} onChange={(e) => setOrgId(e.target.value)}>
-            {state.locations.map((o) => (
+            {state.locations.filter(l=>l.sourceKind!=="public").map((o) => (
               <option key={o.id} value={o.id}>
                 {o.name}
               </option>
