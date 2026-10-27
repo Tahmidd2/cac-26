@@ -17,6 +17,7 @@ export default function FoodCard({
   index,
   selected,
   onSelect,
+  onHover,
   miles,
   compact = false,
   distributionDate,
@@ -25,6 +26,7 @@ export default function FoodCard({
   index?: number;
   selected?: boolean;
   onSelect?: () => void;
+  onHover?: (active: boolean) => void;
   miles?: number;
   compact?: boolean;
   distributionDate?: string;
@@ -35,7 +37,8 @@ export default function FoodCard({
     <article
       id={`card-${l.id}`}
       className={`food-card ${selected ? "selected" : ""} ${compact ? "food-card-compact" : ""}`}
-      onMouseEnter={onSelect}
+      onMouseEnter={() => onHover?.(true)}
+      onMouseLeave={() => onHover?.(false)}
       onFocus={onSelect}
     >
       <div className="food-card-top">

@@ -79,7 +79,10 @@ export function Modal({
             'button:not(:disabled),a,input,select,textarea,[tabindex="0"]',
           ),
         );
-        if (e.shiftKey && document.activeElement === all[0]) {
+        if (!el.contains(document.activeElement)) {
+          e.preventDefault();
+          (e.shiftKey ? all.at(-1) : all[0])?.focus();
+        } else if (e.shiftKey && document.activeElement === all[0]) {
           e.preventDefault();
           all.at(-1)?.focus();
         } else if (!e.shiftKey && document.activeElement === all.at(-1)) {

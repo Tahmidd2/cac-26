@@ -184,3 +184,12 @@ test("seeded relationships and capacities are internally consistent", () => {
   assert.ok(nextDay(6) >= today);
   assert.equal(distance([40, -73], [40, -73]), 0);
 });
+
+test("shift expiration uses New York time, including a shift that ended earlier today", async () => {
+  const { shiftHasEnded, datePlus } = await import("../src/lib/data");
+  const now = new Date("2026-10-28T20:00:00Z");
+  assert.equal(shiftHasEnded({ date: "2026-10-28", end: 15 }, now), true);
+  assert.equal(shiftHasEnded({ date: "2026-10-28", end: 17 }, now), false);
+  assert.equal(shiftHasEnded({ date: "2026-10-27", end: 23 }, now), true);
+  assert.equal(datePlus("2026-12-31", 1), "2027-01-01");
+});

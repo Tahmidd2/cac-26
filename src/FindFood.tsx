@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { useDemo } from "./lib/store";
 import { resolveArea, distance } from "./lib/services";
-import { days, today, time } from "./lib/data";
+import { days, today, time, newYorkHour } from "./lib/data";
 import FoodMap from "./components/Map";
 import FoodCard from "./components/FoodCard";
 import { Empty, Badge, Modal } from "./components/ui";
@@ -43,11 +43,15 @@ export default function FindFood() {
     [language, setLanguage] = useState("Any language"),
     [transport, setTransport] = useState("Public transit"),
     [selected, setSelected] = useState(""),
+    [hovered, setHovered] = useState(""),
     [view, setView] = useState("list"),
     [extra, setExtra] = useState(false),
     [geoMessage, setGeoMessage] = useState(""),
     [compare, setCompare] = useState(false);
-  const origin = resolveArea(query, state.locations);
+  const origin = useMemo(
+    () => resolveArea(query, state.locations),
+    [query, state.locations],
+  );
   const results = useMemo(
     () =>
       state.locations
@@ -67,7 +71,8 @@ export default function FindFood() {
             filters.every((f) =>
               f === "Open today"
                 ? l.days.includes(new Date(today + "T12:00:00").getDay()) &&
-                  l.verified
+                  l.verified &&
+                  l.end > newYorkHour()
                 : f === "Delivery support"
                   ? l.delivery
                   : f === "Accessible entrance"
@@ -95,6 +100,7 @@ export default function FindFood() {
       filters,
     ],
   );
+  const mapLocations = useMemo(() => results.map((r) => r.l), [results]);
   function toggle(f: string) {
     setFilters((s) => (s.includes(f) ? s.filter((x) => x !== f) : [...s, f]));
   }
@@ -337,6 +343,7 @@ export default function FindFood() {
                   index={i}
                   selected={selected === l.id}
                   onSelect={() => setSelected(l.id)}
+                  onHover={(active) => setHovered(active ? l.id : "")}
                   miles={miles}
                 />
               ))}
@@ -370,13 +377,27 @@ export default function FindFood() {
             className={`map-panel ${view === "list" ? "mobile-hidden" : ""}`}
           >
             <FoodMap
-              locations={results.map((r) => r.l)}
-              selected={selected}
+              locations={mapLocations}
+              selected={hovered || selected}
               onSelect={(id) => {
+                setHovered("");
                 setSelected(id);
-                document
-                  .getElementById(`card-${id}`)
-                  ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                const card = document.getElementById(`card-${id}`);
+                const panel = card?.closest<HTMLElement>(".results-panel");
+                if (
+                  card &&
+                  panel?.clientHeight &&
+                  card.getClientRects().length
+                ) {
+                  panel.scrollTo({
+                    top:
+                      card.getBoundingClientRect().top -
+                      panel.getBoundingClientRect().top +
+                      panel.scrollTop -
+                      12,
+                    behavior: "smooth",
+                  });
+                }
               }}
             />
             <div className="map-help-card">

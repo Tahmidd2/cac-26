@@ -16,7 +16,14 @@ import {
 import { Modal, Badge, Success, Empty } from "./components/ui";
 import { useDemo } from "./lib/store";
 import type { FoodLocation, Transport, VisitPlan } from "./lib/types";
-import { today, nextDistribution, formatDate, time, days } from "./lib/data";
+import {
+  today,
+  nextDistribution,
+  formatDate,
+  time,
+  days,
+  newYorkHour,
+} from "./lib/data";
 import { distance, resolveArea, travelMinutes } from "./lib/services";
 export function directions(l: FoodLocation, transport = "Public transit") {
   return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${l.address}, ${l.borough}, New York`)}&travelmode=${transport === "Walking" ? "walking" : transport === "Driving" ? "driving" : "transit"}`;
@@ -38,7 +45,13 @@ export function Planner({
       existing?.transport || "Public transit",
     ),
     [date, setDate] = useState(
-      existing?.date || preferredDate || nextDistribution(l),
+      existing?.date ||
+        (preferredDate &&
+        /^\d{4}-\d{2}-\d{2}$/.test(preferredDate) &&
+        preferredDate >= today &&
+        l.days.includes(new Date(preferredDate + "T12:00:00").getDay())
+          ? preferredDate
+          : nextDistribution(l)),
     ),
     [done, setDone] = useState(false),
     [error, setError] = useState("");
@@ -100,6 +113,7 @@ export function Planner({
               e.preventDefault();
               if (
                 date < today ||
+                (date === today && l.end <= newYorkHour()) ||
                 !l.days.includes(new Date(date + "T12:00:00").getDay())
               ) {
                 setError(

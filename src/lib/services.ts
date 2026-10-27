@@ -6,7 +6,7 @@ import type {
   DemoState,
   RequestStatus,
 } from "./types";
-import { days, today } from "./data";
+import { days, today, shiftHasEnded } from "./data";
 const knownAreas: Record<string, [number, number]> = {
   "11372": [40.7489, -73.8913],
   "11373": [40.742, -73.881],
@@ -135,7 +135,7 @@ export function matchVolunteers(
       if (
         !org ||
         !o.active ||
-        o.date < today ||
+        shiftHasEnded(o) ||
         o.filled >= o.capacity ||
         p.minAge < o.minAge ||
         (p.accessible && !o.accessible) ||
@@ -181,7 +181,7 @@ export function matchVolunteers(
 }
 export function registerShift(state: DemoState, id: string): DemoState {
   const o = state.opportunities.find((o) => o.id === id);
-  if (!o || !o.active || o.date < today || o.filled >= o.capacity)
+  if (!o || !o.active || shiftHasEnded(o) || o.filled >= o.capacity)
     throw new Error(
       "This shift is no longer available. Please choose another.",
     );

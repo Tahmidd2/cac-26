@@ -22,7 +22,13 @@ import {
 } from "lucide-react";
 import { useDemo } from "./lib/store";
 import { Badge, Empty, Modal, Success } from "./components/ui";
-import { formatDate, time, days, today, volunteerPhoto } from "./lib/data";
+import {
+  formatDate,
+  time,
+  days,
+  shiftHasEnded,
+  volunteerPhoto,
+} from "./lib/data";
 import type {
   Opportunity,
   FoodLocation,
@@ -542,7 +548,7 @@ export function VolunteerDetail() {
                 registered ||
                 !o.active ||
                 o.filled >= o.capacity ||
-                o.date < today
+                shiftHasEnded(o)
               }
               className="button button-primary button-full"
               onClick={() => setSignup(true)}
@@ -556,7 +562,7 @@ export function VolunteerDetail() {
                 "Opportunity closed"
               ) : o.filled >= o.capacity ? (
                 "Shift full"
-              ) : o.date < today ? (
+              ) : shiftHasEnded(o) ? (
                 "Shift has passed"
               ) : (
                 <>

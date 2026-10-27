@@ -68,7 +68,7 @@ Dates are generated relative to the current date in `America/New_York`. Distribu
 - Search resolves only seeded ZIP codes, neighborhoods, boroughs, or NYC. Unsupported areas receive a useful empty state. Explicit browser geolocation resolves to the nearest sample neighborhood and discards the precise coordinates; NYC coverage limits are explained.
 - Preferences remain component-local. Demo persistence includes only general neighborhoods, resource IDs, dates, roles, schedules, and checklist/status values. Do not enter precise addresses or sensitive information into free-text demo fields.
 - Data is shared across views in the same browser, not between devices. There is no cross-user or real-time backend.
-- Map tiles use CARTO/OpenStreetMap, photographs use Unsplash, and fonts use Google Fonts. These optional assets need internet access. The directory and workflows still function without map tiles, and system-font/image-background fallbacks preserve the layout. Asset providers receive ordinary network requests; browser location is requested only after an explicit action.
+- Map tiles use OpenStreetMap, photographs use Unsplash, and fonts use Google Fonts. These optional assets need internet access. The directory and workflows still function without map tiles, and system-font/image-background fallbacks preserve the layout. Asset providers receive ordinary network requests; browser location is requested only after an explicit action.
 
 ## Toward a real deployment
 

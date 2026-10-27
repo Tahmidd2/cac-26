@@ -7,11 +7,29 @@ import "leaflet/dist/leaflet.css";
 function Sync({
   selected,
   locations,
+  onSelect,
 }: {
   selected: string;
   locations: FoodLocation[];
+  onSelect: (id: string) => void;
 }) {
   const map = useMap();
+  useEffect(() => {
+    function selectPopup(event: L.PopupEvent) {
+      const point = event.popup.getLatLng();
+      if (!point) return;
+      const location = locations.find(
+        (l) =>
+          Math.abs(l.lat - point.lat) < 0.00001 &&
+          Math.abs(l.lng - point.lng) < 0.00001,
+      );
+      if (location) onSelect(location.id);
+    }
+    map.on("popupopen", selectPopup);
+    return () => {
+      map.off("popupopen", selectPopup);
+    };
+  }, [map, locations, onSelect]);
   useEffect(() => {
     const l = locations.find((l) => l.id === selected);
     if (l)
@@ -82,11 +100,10 @@ export default function FoodMap({
         className="leaflet-map"
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; CARTO'
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           eventHandlers={{
             tileerror: () => setFailed(true),
-            load: () => setFailed(false),
           }}
         />
         {locations.map((l, i) => (
@@ -112,7 +129,7 @@ export default function FoodMap({
             </Popup>
           </Marker>
         ))}
-        <Sync selected={selected} locations={locations} />
+        <Sync selected={selected} locations={locations} onSelect={onSelect} />
         <Controls />
       </MapContainer>
       <div className="map-label">

@@ -22,9 +22,28 @@ export function localDate(date = new Date()) {
 }
 export const today = localDate();
 export function datePlus(date: string, count: number) {
-  const d = new Date(date + "T12:00:00");
-  d.setDate(d.getDate() + count);
-  return localDate(d);
+  const d = new Date(date + "T12:00:00Z");
+  d.setUTCDate(d.getUTCDate() + count);
+  return d.toISOString().slice(0, 10);
+}
+export function newYorkHour(now = new Date()) {
+  return Number(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/New_York",
+      hour: "numeric",
+      hourCycle: "h23",
+    }).format(now),
+  );
+}
+export function shiftHasEnded(
+  shift: Pick<Opportunity, "date" | "end">,
+  now = new Date(),
+) {
+  const currentDate = localDate(now);
+  return (
+    shift.date < currentDate ||
+    (shift.date === currentDate && shift.end <= newYorkHour(now))
+  );
 }
 export function nextDay(day: number, offset = 0) {
   const d = new Date(today + "T12:00:00");
@@ -42,13 +61,7 @@ export function time(hour: number) {
 }
 export function nextDistribution(l: FoodLocation) {
   const weekday = new Date(today + "T12:00:00").getDay();
-  const hour = Number(
-    new Intl.DateTimeFormat("en-US", {
-      timeZone: "America/New_York",
-      hour: "numeric",
-      hourCycle: "h23",
-    }).format(new Date()),
-  );
+  const hour = newYorkHour();
   return datePlus(
     today,
     Math.min(
