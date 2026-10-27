@@ -8,6 +8,7 @@ import {
   useMap,
 } from "react-leaflet";
 import type { TravelRoute } from "../lib/types";
+import { TILE_ATTRIBUTION, TILE_BASE, TILE_LABELS } from "./Map";
 import "leaflet/dist/leaflet.css";
 function Fit({ points }: { points: [number, number][] }) {
   const map = useMap();
@@ -29,11 +30,11 @@ export default function TripMap({ route }: { route: TravelRoute }) {
         scrollWheelZoom={false}
       >
         <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-          subdomains="abcd"
-          detectRetina
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url={TILE_BASE}
+          maxNativeZoom={16}
+          attribution={TILE_ATTRIBUTION}
         />
+        <TileLayer url={TILE_LABELS} maxNativeZoom={16} />
         <Polyline
           positions={route.coordinates}
           pathOptions={{ color: "#244d3e", weight: 5, opacity: 0.9 }}

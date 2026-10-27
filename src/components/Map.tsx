@@ -221,11 +221,15 @@ function Controls() {
     </div>
   );
 }
+const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services";
 const TILES = {
-  primary:
-    "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+  primary: `${ESRI}/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}`,
   fallback: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
 };
+export const TILE_LABELS = `${ESRI}/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}`;
+export const TILE_BASE = TILES.primary;
+export const TILE_ATTRIBUTION =
+  'Tiles &copy; <a href="https://www.esri.com">Esri</a> &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors';
 function Origin({
   origin,
   radiusMiles,
@@ -298,11 +302,10 @@ export default function FoodMap({
         <TileLayer
           key={tileSource}
           url={TILES[tileSource]}
-          subdomains="abcd"
-          detectRetina
+          maxNativeZoom={16}
           attribution={
             tileSource === "primary"
-              ? '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+              ? TILE_ATTRIBUTION
               : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           }
           eventHandlers={{
@@ -315,6 +318,9 @@ export default function FoodMap({
             },
           }}
         />
+        {tileSource === "primary" && (
+          <TileLayer url={TILE_LABELS} maxNativeZoom={16} pane="overlayPane" />
+        )}
         <GeoJSON
           data={boroughBoundaries as FeatureCollection}
           style={{

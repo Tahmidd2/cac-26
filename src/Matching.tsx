@@ -447,7 +447,7 @@ export default function Matching({
                 setStep(step + 1);
               }}
             >
-              {step === 2 ? "See my matches" : "Continue"}
+              {step === 2 ? "See My Matches" : "Continue"}
             </button>
           </div>
         </div>

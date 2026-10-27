@@ -694,7 +694,7 @@ export function Planner({
               disabled={loading}
               onClick={step === 2 ? save : continueStep}
             >
-              {step === 2 ? "Save my visit" : "Continue"}
+              {step === 2 ? "Save My Visit" : "Continue"}
             </button>
           </div>
         </>
