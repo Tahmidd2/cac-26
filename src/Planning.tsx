@@ -28,6 +28,7 @@ import {
   upcomingWindows,
   windowsForDate,
   validateVisit,
+  validateTravelTimes,
   minutesTime,
   setVisitStatus,
 } from "./lib/schedules";
@@ -184,6 +185,11 @@ export function Planner({
       );
       return;
     }
+    const travelIssue = !route && validateTravelTimes(outbound, returnMinutes);
+    if (travelIssue) {
+      setError(travelIssue);
+      return;
+    }
     const issue = validateVisit(l, {
       date,
       arrivalMinutes: arrival,
@@ -197,6 +203,11 @@ export function Planner({
     setStep(2);
   }
   function save() {
+    const travelIssue = !route && validateTravelTimes(outbound, returnMinutes);
+    if (travelIssue) {
+      setError(travelIssue);
+      return;
+    }
     const plan: VisitPlan = {
       id: existing?.id || crypto.randomUUID(),
       locationId: l.id,

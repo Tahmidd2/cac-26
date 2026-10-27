@@ -73,6 +73,7 @@ function NetworkAtlas() {
             viewBox="0 0 580 630"
             role="img"
             aria-label={`${count} food programs, with official outlines for all five New York City boroughs`}
+            onClick={() => setHoveredHub(null)}
           >
             <defs>
               <pattern
@@ -124,6 +125,10 @@ function NetworkAtlas() {
                     opacity={isActive ? 0.88 : 0.3}
                     onMouseEnter={() => setHoveredHub(l)}
                     onMouseLeave={() => setHoveredHub(null)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setHoveredHub(l);
+                    }}
                   >
                     <title>
                       {l.name} — {l.serviceTypes?.join(" & ") || l.type},{" "}

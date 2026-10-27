@@ -50,11 +50,17 @@ export function validateVisit(
   if (serviceWindows(location).length && !windows.length)
     return "The posted schedule does not include this day. Choose a listed day.";
   if (
-    !plan.arrivalMinutes ||
+    !Number.isFinite(plan.arrivalMinutes) ||
+    plan.arrivalMinutes === undefined ||
     plan.arrivalMinutes < 0 ||
     plan.arrivalMinutes >= 1440
   )
     return "Choose a valid arrival time.";
+  if (
+    plan.outboundMinutes !== undefined &&
+    (!Number.isFinite(plan.outboundMinutes) || plan.outboundMinutes < 1)
+  )
+    return "Choose a valid journey time.";
   if (
     windows.length &&
     !windows.some(
@@ -65,13 +71,21 @@ export function validateVisit(
   )
     return "Arrive during a posted distribution window, at least 10 minutes before closing.";
   if (
-    plan.date === today &&
-    plan.arrivalMinutes <= newYorkMinutes() + (plan.outboundMinutes || 0)
+    ((Date.parse(plan.date) - Date.parse(today)) / 86400000) * 1440 +
+      plan.arrivalMinutes <=
+    newYorkMinutes() + (plan.outboundMinutes || 0)
   )
-    return "There is not enough time to reach this visit today. Choose a later arrival or another date.";
+    return "There is not enough time to reach this visit. Choose a later arrival or another date.";
   if (location.sourceKind === "public" && !plan.providerConfirmed)
     return "Confirm the schedule and pickup requirements with the organization before saving this visit.";
   return null;
+}
+export function validateTravelTimes(outbound: number, returning: number) {
+  return [outbound, returning].every(
+    (n) => Number.isInteger(n) && n >= 1 && n <= 600,
+  )
+    ? null
+    : "Enter whole travel times between 1 and 600 minutes for both journeys.";
 }
 export function setVisitStatus(
   plans: VisitPlan[],

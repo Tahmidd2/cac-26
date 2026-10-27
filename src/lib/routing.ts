@@ -21,7 +21,7 @@ export function directionsUrl(
     params.set(
       "origin",
       /^\d{5}$/.test(originArea)
-        ? `${originArea}, New York, USA`
+        ? `${originArea}, USA`
         : `${originArea}, New York, USA`,
     );
   return `https://www.google.com/maps/dir/?${params}`;

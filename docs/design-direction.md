@@ -20,3 +20,11 @@ The interface must make source quality, unconfirmed schedules, and actual routin
 
 - Anthropic's official frontend-design skill, installed at `~/.codex/skills/frontend-design/SKILL.md`.
 - Nielsen Norman Group: [visual design principles](https://www.nngroup.com/articles/principles-visual-design/), [icon usability](https://www.nngroup.com/articles/icon-usability/), [animation timing](https://www.nngroup.com/articles/animation-duration/).
+
+## Original hero asset
+
+Created with the built-in image-generation tool. App asset: `public/images/neighbors-sharing-groceries.png`. This illustrative image does not depict a claimed partner organization.
+
+Prompt direction: Editorial documentary photograph for a New York neighborhood food cooperative website. Close crop of two neighbors' hands passing a substantial brown kraft paper grocery bag filled with leafy greens, carrots, ripe tomatoes, and a baguette. One person wears dark forest-green workwear and the other a soft cream sleeve. Warm natural daylight, a quiet pale sage wall, tactile paper and fresh produce, generous calm composition, authentic shared care. No faces, lettering, logos, badges, or watermark. Photorealistic, restrained color, suitable for a large arched hero crop.
+
+The final atlas uses official shoreline outlines, a quiet water color, and borough names. Section entry gently introduces boundaries and dots without delaying access to the directory. Hover labels give every dot a concrete identity.

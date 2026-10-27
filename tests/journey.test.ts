@@ -14,6 +14,7 @@ import {
   validateVisit,
   upcomingWindows,
   setVisitStatus,
+  validateTravelTimes,
 } from "../src/lib/schedules";
 import { directionsUrl, retrieveRoute } from "../src/lib/routing";
 import { resolveArea, matchFood } from "../src/lib/services";
@@ -168,12 +169,29 @@ test("unknown access or dietary information stays uncertain in the real-network 
 });
 test("directions contain both endpoints and the selected travel mode", () => {
   const url = new URL(directionsUrl(location, "Walking", "11372"));
-  assert.equal(url.searchParams.get("origin"), "11372, New York, USA");
+  assert.equal(url.searchParams.get("origin"), "11372, USA");
   assert.equal(
     url.searchParams.get("destination"),
     `${location.lat},${location.lng}`,
   );
   assert.equal(url.searchParams.get("travelmode"), "walking");
+  assert.equal(
+    new URL(
+      directionsUrl(location, "Public transit", "07030"),
+    ).searchParams.get("origin"),
+    "07030, USA",
+  );
+});
+test("manually checked transit times reject negative, missing, fractional, or excessive durations", () => {
+  assert.equal(validateTravelTimes(25, 30), null);
+  for (const pair of [
+    [0, 10],
+    [-5, 10],
+    [10, NaN],
+    [10, 601],
+    [10.5, 20],
+  ])
+    assert.ok(validateTravelTimes(pair[0], pair[1]));
 });
 test("walking retrieval requests a full round trip and preserves different outward and return times", async () => {
   const previous = globalThis.fetch;
