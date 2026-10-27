@@ -28,7 +28,7 @@ export interface FoodLocation {
   instructions: string;
   image: string;
   householdLimit?: number;
-  sourceKind?: 'public' | 'demo';
+  sourceKind?: "public" | "demo";
   sourceName?: string;
   sourceUrl?: string;
   sourceRecordUrl?: string;
@@ -41,14 +41,29 @@ export interface FoodLocation {
   conditionalSchedule?: boolean;
   postedSchedule?: string;
 }
-export interface ServiceWindow { day: number; start: number; end: number; service?: string; }
-export interface TravelStep { instruction: string; meters: number; }
-export interface TravelRoute {
-  provider: string; retrievedAt: string; mode: 'Walking' | 'Driving';
-  outboundMinutes: number; returnMinutes: number; meters: number;
-  coordinates: [number,number][]; destination: [number,number]; steps: TravelStep[];
+export interface ServiceWindow {
+  day: number;
+  start: number;
+  end: number;
+  service?: string;
 }
-export type VisitStatus = 'Planned' | 'On my way' | 'Collected' | 'Could not collect';
+export interface TravelStep {
+  instruction: string;
+  meters: number;
+}
+export interface TravelRoute {
+  provider: string;
+  retrievedAt: string;
+  mode: "Walking" | "Driving";
+  outboundMinutes: number;
+  returnMinutes: number;
+  meters: number;
+  coordinates: [number, number][];
+  destination: [number, number];
+  steps: TravelStep[];
+}
+export type VisitStatus =
+  "Planned" | "On my way" | "Collected" | "Could not collect";
 export interface Opportunity {
   id: string;
   orgId: string;
@@ -86,7 +101,7 @@ export interface VisitPlan {
   route?: TravelRoute;
   outboundMinutes?: number;
   returnMinutes?: number;
-  travelTimeSource?: 'route' | 'user' | 'unavailable';
+  travelTimeSource?: "route" | "user" | "unavailable";
   providerConfirmed?: boolean;
   status?: VisitStatus;
   outcomeNote?: string;

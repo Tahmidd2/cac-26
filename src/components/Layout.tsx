@@ -6,19 +6,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import {
-  ArrowUpRight,
-  ChevronDown,
-  Menu,
-  X,
-  Heart,
-  CalendarDays,
-  Search,
-  Users,
-  Building2,
-  Info,
-  ArrowRight,
-} from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Brand, Modal } from "./ui";
 import { useDemo } from "../lib/store";
 import type { Role } from "../lib/types";
@@ -26,8 +14,8 @@ export default function Layout() {
   const { state, update } = useDemo();
   const [menu, setMenu] = useState(false),
     [roleOpen, setRoleOpen] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
+  const navigate = useNavigate(),
+    location = useLocation();
   function switchRole(role: Role) {
     update((s) => ({ ...s, role }));
     setRoleOpen(false);
@@ -44,15 +32,6 @@ export default function Layout() {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      <div className="demo-strip">
-        <span>
-          <span className="tiny-dot" /> A little connection. A lot of
-          possibility.
-        </span>
-        <button onClick={() => setRoleOpen(true)}>
-          Interactive demo <Info size={12} />
-        </button>
-      </div>
       <header className="site-header">
         <div className="nav-wrap">
           <Brand />
@@ -74,25 +53,11 @@ export default function Layout() {
             </NavLink>
           </nav>
           <div className="nav-actions">
-            <Link
-              className="plan-link"
-              to="/my-plan"
-              aria-label={`My plan, ${state.plans.length} visits`}
-            >
-              <CalendarDays size={18} />
-              <span>My plan</span>
-              {state.plans.length > 0 && <b>{state.plans.length}</b>}
+            <Link className="plan-link" to="/my-plan">
+              My plan{state.plans.length > 0 && <b>{state.plans.length}</b>}
             </Link>
             <button className="role-button" onClick={() => setRoleOpen(true)}>
-              <span className="avatar">
-                {state.role === "Family"
-                  ? "N"
-                  : state.role === "Volunteer"
-                    ? "V"
-                    : "O"}
-              </span>
-              <span>Explore demo</span>
-              <ChevronDown size={14} />
+              Explore the demo
             </button>
             <button
               className="menu-toggle icon-button"
@@ -100,7 +65,7 @@ export default function Layout() {
               aria-expanded={menu}
               onClick={() => setMenu(!menu)}
             >
-              {menu ? <X /> : <Menu />}
+              {menu ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </div>
@@ -114,99 +79,96 @@ export default function Layout() {
             <Brand />
             <p>
               Good food, within reach.
-              <br />A stronger community, together.
+              <br />
+              New York, together.
             </p>
           </div>
           <div>
-            <h4>Find your way</h4>
-            <Link to="/find-food">Find food</Link>
-            <Link to="/find-food/match">Find my match</Link>
-            <Link to="/my-plan">My weekly plan</Link>
+            <h4>For your everyday</h4>
+            <Link to="/find-food">Find food near you</Link>
+            <Link to="/find-food/match">Help me find a fit</Link>
+            <Link to="/my-plan">My food plan</Link>
           </div>
           <div>
-            <h4>Lend a hand</h4>
-            <Link to="/volunteer">Volunteer opportunities</Link>
-            <Link to="/organizations">For organizations</Link>
+            <h4>For your community</h4>
+            <Link to="/volunteer">Ways to volunteer</Link>
+            <Link to="/organizations">Organization workspace</Link>
             <Link to="/volunteer/dashboard">My volunteer schedule</Link>
           </div>
           <div>
             <h4>A little more support</h4>
-            <Link to="/resources">Resources & benefits</Link>
+            <Link to="/resources">Food & benefits resources</Link>
             <Link to="/resources#accessibility">Accessibility</Link>
-            <Link to="/auth">Explore a demo role</Link>
+            <Link to="/auth">Explore demo roles</Link>
           </div>
         </div>
         <div className="footer-bottom">
-          <span>
-            © {new Date().getFullYear()} Nourish. Built around our neighbors.
-          </span>
-          <span>
-            <Heart size={13} /> This is a prototype. All organizations and
-            activity are fictional.
-          </span>
+          <span>© {new Date().getFullYear()} Nourish</span>
+          <p>
+            Food listings are sourced from NYC Food Help. Organization accounts,
+            volunteer signups, and assistance coordination are demonstrations.
+          </p>
         </div>
       </footer>
       <nav className="bottom-nav" aria-label="Mobile quick navigation">
-        <NavLink to="/find-food">
-          <Search size={19} />
-          Find food
-        </NavLink>
-        <NavLink to="/volunteer">
-          <Heart size={19} />
-          Volunteer
-        </NavLink>
+        <NavLink to="/find-food">Find food</NavLink>
+        <NavLink to="/volunteer">Volunteer</NavLink>
         <NavLink to="/my-plan">
-          <CalendarDays size={19} />
-          My plan
+          My plan{state.plans.length > 0 && <span>{state.plans.length}</span>}
         </NavLink>
-        <button onClick={() => setRoleOpen(true)}>
-          <Users size={19} />
-          Demo role
-        </button>
+        <button onClick={() => setRoleOpen(true)}>Demo roles</button>
       </nav>
       {roleOpen && (
         <Modal
-          title="A community. Three perspectives."
+          title="A community, connected."
           onClose={() => setRoleOpen(false)}
         >
           <p className="muted">
-            Explore how families, volunteers, and organizations connect. No
-            account needed.
+            Find real public food listings, or try the connected volunteer and
+            organization demonstrations.
           </p>
           <div className="role-choices">
             {(
               [
-                ["Family", Search, "Find food that works for you."],
-                ["Volunteer", Heart, "Put your time where it matters."],
-                ["Organization", Building2, "Bring your community together."],
+                [
+                  "Family",
+                  "Find food & plan a visit",
+                  "Explore public NYC listings and build your personal food plan.",
+                ],
+                [
+                  "Volunteer",
+                  "Share your time",
+                  "Try volunteer discovery, signup, and your sample schedule.",
+                ],
+                [
+                  "Organization",
+                  "Support your neighborhood",
+                  "Manage the sample pantry, shifts, and assistance workflow.",
+                ],
               ] as const
-            ).map(([r, Icon, desc]) => (
-              <button key={r} onClick={() => switchRole(r)}>
-                <span className="role-choice-icon">
-                  <Icon size={22} />
-                </span>
+            ).map(([role, title, description]) => (
+              <button key={role} onClick={() => switchRole(role)}>
                 <span>
-                  <strong>Explore as a {r.toLowerCase()}</strong>
-                  <small>{desc}</small>
+                  <strong>{title}</strong>
+                  <small>{description}</small>
                 </span>
-                <ArrowRight size={19} />
+                <span className="role-choice-action">Explore</span>
               </button>
             ))}
           </div>
           <div className="notice">
-            <Info size={17} />
             <p>
-              Demo mode only. No real account is created, no registrations are
-              sent, and no food or assistance is reserved. Changes stay in this
-              browser.
+              No real account is created, messages are not sent, and no food or
+              assistance is reserved. Personal plans and demo changes stay in
+              this browser.
             </p>
           </div>
           <Link
+            className="text-link"
             to="/auth"
             onClick={() => setRoleOpen(false)}
-            className="text-link"
           >
-            Preview sign in <ArrowUpRight size={15} />
+            Preview sign in
           </Link>
         </Modal>
       )}

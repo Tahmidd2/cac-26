@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   ArrowLeft,
-  ArrowRight,
   Check,
   Sparkles,
   MapPin,
@@ -17,7 +16,6 @@ import {
   ChevronDown,
   Heart,
   Info,
-  ArrowUpRight,
 } from "lucide-react";
 import { useDemo } from "./lib/store";
 import type {
@@ -29,7 +27,7 @@ import { matchFood, matchVolunteers } from "./lib/services";
 import { days, formatDate, time } from "./lib/data";
 import { Badge, Empty } from "./components/ui";
 import FoodCard from "./components/FoodCard";
-import {upcomingWindows} from "./lib/schedules";
+import { upcomingWindows } from "./lib/schedules";
 export default function Matching({
   volunteer = false,
 }: {
@@ -65,7 +63,12 @@ export default function Matching({
   ) {
     setPref((s) => ({ ...s, [key]: value }));
   }
-  const foodResults = matchFood(state.locations.filter(l => sampleNetwork ? l.sourceKind !== "public" : l.sourceKind === "public"), food).slice(0, 5);
+  const foodResults = matchFood(
+    state.locations.filter((l) =>
+      sampleNetwork ? l.sourceKind !== "public" : l.sourceKind === "public",
+    ),
+    food,
+  ).slice(0, 5);
   const volunteerResults = matchVolunteers(
     state.opportunities,
     state.locations,
@@ -447,7 +450,6 @@ export default function Matching({
               }}
             >
               {step === 2 ? "See my matches" : "Continue"}
-              <ArrowRight size={16} />
             </button>
           </div>
         </div>
@@ -462,7 +464,9 @@ export default function Matching({
               <p>
                 {volunteer ? pref.area : food.area} ·{" "}
                 {volunteer ? pref.day : `${food.day} · ${food.transport}`}
-                <span>Based on posted hours, distance, and your preferences.</span>
+                <span>
+                  Based on posted hours, distance, and your preferences.
+                </span>
               </p>
             </div>
             <button className="text-link" onClick={() => setStep(0)}>
@@ -512,7 +516,6 @@ export default function Matching({
                         to={`/volunteer/${o.id}`}
                       >
                         View opportunity
-                        <ArrowUpRight size={14} />
                       </Link>
                     </div>
                   </article>
@@ -531,7 +534,9 @@ export default function Matching({
                       distributionDate={
                         food.day === "Any day"
                           ? undefined
-                          : upcomingWindows(r.location,15).find(v => days[v.window.day] === food.day)?.date
+                          : upcomingWindows(r.location, 15).find(
+                              (v) => days[v.window.day] === food.day,
+                            )?.date
                       }
                       compact
                     />
@@ -586,14 +591,15 @@ export default function Matching({
                 rel="noreferrer"
               >
                 Explore real NYC food resources
-                <ArrowUpRight size={14} />
               </a>
             </Empty>
           )}
           <div className="notice">
             <Info size={17} />
             <p>
-              Matching uses transparent rules and published information. Confirm the schedule and requirements with the provider. Volunteer opportunities and sample organizations remain simulated.
+              Matching uses transparent rules and published information. Confirm
+              the schedule and requirements with the provider. Volunteer
+              opportunities and sample organizations remain simulated.
             </p>
           </div>
         </div>

@@ -1,344 +1,375 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  ArrowRight,
-  ArrowUpRight,
-  MapPin,
-  Navigation,
-  Leaf,
-  Heart,
-  Check,
-  Clock3,
-  Sparkles,
-  MoveUpRight,
-  ShoppingBasket,
-  Users,
-  Route,
-  HandHeart,
-  ShieldCheck,
-} from "lucide-react";
-import { foodPhoto, volunteerPhoto } from "./lib/data";
-import { Badge } from "./components/ui";
+import { Search } from "lucide-react";
+import { directoryMetadata, publicLocations, volunteerPhoto } from "./lib/data";
+import { Reveal, useParallax } from "./components/Motion";
+const boroughs = ["Queens", "Brooklyn", "Manhattan", "Bronx", "Staten Island"];
+function NetworkAtlas() {
+  const [active, setActive] = useState("All five boroughs");
+  const points = publicLocations.filter(
+    (l) => active === "All five boroughs" || l.borough === active,
+  );
+  const count = points.length;
+  const activeIds = new Set(points.map((p) => p.id));
+  return (
+    <section className="network-section" id="our-neighborhoods">
+      <div className="network-content">
+        <Reveal>
+          <p className="page-context">A bigger neighborhood</p>
+          <h2>
+            Good people.
+            <br />
+            All over New York.
+          </h2>
+          <p>
+            Pantries, community kitchens, and a place to start in every borough.
+            Explore {directoryMetadata.count} publicly listed food programs,
+            with source information you can check.
+          </p>
+        </Reveal>
+        <div className="borough-list">
+          <button
+            className={active === "All five boroughs" ? "active" : ""}
+            onClick={() => setActive("All five boroughs")}
+          >
+            <span>All five boroughs</span>
+            <b>{directoryMetadata.count}</b>
+          </button>
+          {boroughs.map((b) => (
+            <button
+              key={b}
+              className={active === b ? "active" : ""}
+              onClick={() => setActive(b)}
+            >
+              <span>{b}</span>
+              <b>
+                {
+                  directoryMetadata.boroughCounts[
+                    b as keyof typeof directoryMetadata.boroughCounts
+                  ]
+                }
+              </b>
+            </button>
+          ))}
+        </div>
+        <Link
+          className="button button-primary"
+          to={`/find-food${active === "All five boroughs" ? "" : `?area=${encodeURIComponent(active)}`}`}
+        >
+          Explore {active === "All five boroughs" ? "the directory" : active}
+        </Link>
+      </div>
+      <Reveal className="network-atlas">
+        <div className="atlas-header">
+          <span>{active}</span>
+          <span>{count} public programs</span>
+        </div>
+        <svg
+          viewBox="0 0 580 630"
+          role="img"
+          aria-label={`${count} food program locations in ${active}`}
+        >
+          <defs>
+            <pattern
+              id="atlas-grid"
+              width="42"
+              height="42"
+              patternUnits="userSpaceOnUse"
+            >
+              <path
+                d="M 42 0 L 0 0 0 42"
+                fill="none"
+                stroke="#c8d6ca"
+                strokeWidth=".65"
+              />
+            </pattern>
+          </defs>
+          <rect width="580" height="630" fill="url(#atlas-grid)" />
+          {publicLocations.map((l) => (
+            <circle
+              key={l.id}
+              cx={((l.lng + 74.25) / 0.53) * 530 + 20}
+              cy={590 - ((l.lat - 40.5) / 0.43) * 550}
+              r={activeIds.has(l.id) ? 3 : 1.5}
+              fill={activeIds.has(l.id) ? "#315b44" : "#b4c5b4"}
+              opacity={activeIds.has(l.id) ? 0.9 : 0.3}
+            >
+              <title>
+                {l.name}, {l.borough}
+              </title>
+            </circle>
+          ))}
+          <text x="350" y="90">
+            Bronx
+          </text>
+          <text x="300" y="224">
+            Manhattan
+          </text>
+          <text x="435" y="295">
+            Queens
+          </text>
+          <text x="350" y="470">
+            Brooklyn
+          </text>
+          <text x="45" y="550">
+            Staten Island
+          </text>
+        </svg>
+        <p>
+          Each dot is a public food-program location.
+          <br />
+          NYC Food Help directory snapshot. Confirm before visiting.
+        </p>
+      </Reveal>
+    </section>
+  );
+}
+function JourneyStory() {
+  const [active, setActive] = useState(0);
+  const section = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const root = section.current;
+    if (!root) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries)
+          if (entry.isIntersecting)
+            setActive(Number((entry.target as HTMLElement).dataset.step));
+      },
+      { rootMargin: "-20% 0px -35% 0px", threshold: 0 },
+    );
+    root.querySelectorAll("[data-step]").forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+  const headings = [
+    "A place that works for you.",
+    "A journey you can make.",
+    "Good food, brought home.",
+  ];
+  return (
+    <section className="journey-story" ref={section} id="how-it-works">
+      <div className="journey-story-visual">
+        <p className="page-context">The whole journey matters</p>
+        <h2>
+          Finding food
+          <br />
+          is the beginning.
+        </h2>
+        <div className="journey-visual-card" data-phase={active}>
+          <div className="journey-phase">
+            <span>{active + 1} / 3</span>
+            <strong>
+              {
+                ["Find your place", "Work out the trip", "Keep the plan"][
+                  active
+                ]
+              }
+            </strong>
+          </div>
+          <svg viewBox="0 0 430 280" aria-hidden="true">
+            <path
+              className="journey-path-base"
+              d="M60 215 C60 100 190 245 210 125 S360 30 365 75"
+            />
+            <path
+              className="journey-path-progress"
+              pathLength="100"
+              style={{ strokeDashoffset: 100 - ((active + 1) / 3) * 100 }}
+              d="M60 215 C60 100 190 245 210 125 S360 30 365 75"
+            />
+            <circle cx="60" cy="215" r="12" />
+            <circle cx="210" cy="125" r="12" />
+            <circle cx="365" cy="75" r="12" />
+            <text x="35" y="255">
+              Find
+            </text>
+            <text x="187" y="170">
+              Travel
+            </text>
+            <text x="330" y="122">
+              Collect
+            </text>
+          </svg>
+          <div className="journey-caption" key={active}>
+            <h3>{headings[active]}</h3>
+            <p>
+              {
+                [
+                  "Posted hours and practical details. One useful shortlist.",
+                  "A starting point, a street route, and a time to leave.",
+                  "Your itinerary, checklist, and pickup record in one place.",
+                ][active]
+              }
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="journey-story-steps">
+        {[
+          {
+            title: "Start with your neighborhood.",
+            body: "Search by ZIP code or neighborhood. See the food programs nearby, read their posted hours, and call to check what you need. No account or proof of need required.",
+            link: "Find food near me",
+            to: "/find-food",
+          },
+          {
+            title: "Know how you’ll get there.",
+            body: "Choose a day that works. Retrieve a walking or driving route, or check a real transit itinerary. See when to leave, the trip home, and what to bring.",
+            link: "Find a place & plan a visit",
+            to: "/find-food",
+          },
+          {
+            title: "Have one less thing to remember.",
+            body: "Save your visit, add it to your calendar, and keep a simple checklist. After the visit, record whether you brought food home—or find another option if plans changed.",
+            link: "See my food plan",
+            to: "/my-plan",
+          },
+        ].map((s, i) => (
+          <div
+            className={`story-step ${active === i ? "active" : ""}`}
+            data-step={i}
+            key={s.title}
+          >
+            <span className="story-step-number">{i + 1}</span>
+            <Reveal>
+              <h3>{s.title}</h3>
+              <p>{s.body}</p>
+              <Link className="text-link" to={s.to}>
+                {s.link}
+              </Link>
+            </Reveal>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
 export default function Home() {
   const [area, setArea] = useState("");
   const navigate = useNavigate();
+  const parallax = useParallax();
   return (
-    <>
-      <section className="home-hero">
+    <div className="home-v2">
+      <section className="home-hero" ref={parallax}>
         <div className="hero-copy">
-          <div className="eyebrow">
-            <span className="small-line" /> GOOD FOOD. STRONGER COMMUNITIES.
-          </div>
+          <p className="hero-location">New York, together.</p>
           <h1>
-            Good food should
+            Good food.
             <br />
-            never be{" "}
-            <em>
-              out
-              <br className="desktop-break" /> of reach.
-            </em>
-            <span className="headline-spark">✳</span>
+            For all of us.
           </h1>
-          <p>
-            Find food that works for your family. Share your time.
-            <br className="desktop-break" /> Help good things reach the people
-            around you.
+          <p className="hero-description">
+            Find a nearby pantry, work out the trip, and get food home. A little
+            more support, right in your neighborhood.
           </p>
-          <div className="hero-buttons">
-            <Link className="button button-primary" to="/find-food">
-              Find food near me <ArrowUpRight size={19} />
-            </Link>
-            <Link className="button button-outline" to="/volunteer">
-              I want to help <Heart size={17} />
-            </Link>
-          </div>
-          <div className="hero-reassurance">
-            <span>
-              <Check size={14} /> No account needed
-            </span>
-            <span>
-              <Check size={14} /> Everyone is welcome
-            </span>
+          <form
+            className="hero-search"
+            onSubmit={(e) => {
+              e.preventDefault();
+              navigate(
+                `/find-food?area=${encodeURIComponent(area.trim() || "11372")}`,
+              );
+            }}
+          >
+            <label htmlFor="hero-area">Let’s start where you are.</label>
+            <div>
+              <Search size={20} />
+              <input
+                id="hero-area"
+                value={area}
+                onChange={(e) => setArea(e.target.value)}
+                placeholder="Your ZIP code or neighborhood"
+                aria-label="Your ZIP code or neighborhood"
+              />
+              <button className="button button-primary" type="submit">
+                Find food
+              </button>
+            </div>
+          </form>
+          <div className="hero-followup">
+            <span>No account needed. Everyone is welcome.</span>
+            <Link to="/volunteer">I’d like to volunteer</Link>
           </div>
         </div>
         <div className="hero-visual">
-          <div className="hero-photo">
+          <div className="hero-image-frame">
             <img
-              src={foodPhoto}
-              alt="Fresh, colorful vegetables at a neighborhood food market"
+              src="/images/neighbors-sharing-groceries.png"
+              alt="Two neighbors passing a paper grocery bag filled with vegetables and bread"
+              fetchPriority="high"
             />
-            <div className="photo-overlay" />
-            <div className="photo-caption">
-              <span className="photo-caption-icon">
-                <HandHeart size={22} />
-              </span>
-              <div>
-                Good food brings us together.
-                <small>Let’s make room at the table.</small>
-              </div>
-            </div>
           </div>
-          <div className="hero-sticker">
-            <Leaf size={23} />
-            <span>
-              Grown in community.
-              <br />
-              Shared with care.
-            </span>
-            <span className="sticker-star">✳</span>
-          </div>
-          <div className="floating-resource">
-            <div className="floating-resource-icon">
-              <ShoppingBasket size={23} />
-            </div>
-            <div>
-              <strong>A little closer to a full pantry.</strong>
-              <span>
-                <span className="tiny-dot" /> Discover neighborhood food
-                resources
-              </span>
-            </div>
-            <ArrowUpRight size={20} />
-            <div className="floating-resource-footer">
-              <MapPin size={13} /> New York City{" "}
-              <span>18 demo locations to explore</span>
-            </div>
-          </div>
-          <span className="hero-caption">
-            FOR OUR NEIGHBORS, BY OUR NEIGHBORS.
-          </span>
-        </div>
-      </section>
-      <section className="location-bar-wrap">
-        <form
-          className="location-bar"
-          onSubmit={(e) => {
-            e.preventDefault();
-            navigate(`/find-food?area=${encodeURIComponent(area || "11372")}`);
-          }}
-        >
-          <div className="location-prompt">
-            <span className="location-symbol">
-              <MapPin size={22} />
-            </span>
-            <div>
-              <h3>Your next good meal starts here.</h3>
-              <p>Let’s find what’s around your corner.</p>
-            </div>
-          </div>
-          <div className="location-input">
-            <MapPin size={18} />
-            <input
-              aria-label="ZIP code or neighborhood"
-              placeholder="Enter ZIP code or neighborhood"
-              value={area}
-              onChange={(e) => setArea(e.target.value)}
-            />
-            <button className="button button-primary" type="submit">
-              Find food <ArrowRight size={18} />
-            </button>
-          </div>
-        </form>
-        <div className="location-under">
-          <span>
-            <ShieldCheck size={14} /> Private by default. Your search is always
-            yours.
-          </span>
-          <Link to="/find-food?today=true">
-            Need food today? <ArrowUpRight size={14} />
-          </Link>
-        </div>
-      </section>
-      <section className="community-strip">
-        <span>
-          Small acts.
-          <br />
-          <strong>A bigger difference.</strong>
-        </span>
-        <div>
-          <strong>
-            18<span>+</span>
-          </strong>
-          <p>Neighborhood food resources</p>
-        </div>
-        <div>
-          <strong>24</strong>
-          <p>Ways to lend a hand</p>
-        </div>
-        <div>
-          <strong>5</strong>
-          <p>Boroughs. One community.</p>
-        </div>
-        <span className="demo-metric-label">
-          AN ILLUSTRATION OF
-          <br />
-          WHAT’S POSSIBLE · DEMO DATA
-        </span>
-      </section>
-      <section className="section how-section" id="how-it-works">
-        <div className="section-heading">
-          <div>
-            <span className="eyebrow">
-              A LITTLE GUIDANCE. A REAL NEXT STEP.
-            </span>
-            <h2>Good things start with connection.</h2>
-          </div>
-          <p>
-            Less searching. More getting there.
-            <br />A simpler way to find food and give back.
-          </p>
-        </div>
-        <div className="steps">
-          <article>
-            <div className="step-top">
-              <span className="step-icon">
-                <MapPin size={24} />
-              </span>
-              <span className="step-number">01</span>
-            </div>
-            <h3>Start where you are.</h3>
+          <div className="hero-image-caption">
+            <span className="caption-rule" />
             <p>
-              Tell us your neighborhood and what works for you. No forms to
-              prove you need a hand.
+              More than a bag of groceries.
+              <br />A little connection.
             </p>
-          </article>
-          <article>
-            <div className="step-top">
-              <span className="step-icon">
-                <Sparkles size={24} />
-              </span>
-              <span className="step-number">02</span>
-            </div>
-            <h3>Find your kind of fit.</h3>
-            <p>
-              Explore food resources or volunteer shifts that match your
-              schedule, needs, and everyday life.
-            </p>
-          </article>
-          <article>
-            <div className="step-top">
-              <span className="step-icon">
-                <Route size={24} />
-              </span>
-              <span className="step-number">03</span>
-            </div>
-            <h3>Make a plan. Move forward.</h3>
-            <p>
-              Know what to bring, how to get there, and what comes next. We’ll
-              help connect the dots.
-            </p>
-          </article>
+          </div>
+          <span className="hero-photo-credit">Created for Nourish</span>
         </div>
       </section>
-      <section className="audience-section section">
-        <div className="audience-food">
-          <Badge tone="white">
-            <ShoppingBasket size={13} /> FOR YOU & YOUR FAMILY
-          </Badge>
-          <h2>
-            A full table.
-            <br />A little peace of mind.
-          </h2>
-          <p>
-            Find nearby food, understand your options, and make a plan that fits
-            your life.
-          </p>
-          <Link className="button button-light" to="/find-food/match">
-            Find my food match <ArrowUpRight size={18} />
-          </Link>
-          <div className="audience-decoration">
-            <Leaf size={110} strokeWidth={0.7} />
-          </div>
-        </div>
-        <div className="audience-volunteer">
+      <div className="home-local-nav">
+        <span>Right around your corner.</span>
+        <nav aria-label="Find food by borough">
+          {boroughs.map((b) => (
+            <Link key={b} to={`/find-food?area=${encodeURIComponent(b)}`}>
+              {b}
+            </Link>
+          ))}
+        </nav>
+        <Link className="food-today-link" to="/find-food?today=true">
+          Need food today?
+        </Link>
+      </div>
+      <JourneyStory />
+      <NetworkAtlas />
+      <section className="give-back-section">
+        <Reveal className="give-back-photo">
           <img
             src={volunteerPhoto}
-            alt="Community volunteers preparing and sharing food"
+            alt="Neighbors volunteering together to prepare food"
+            loading="lazy"
           />
-          <div className="audience-volunteer-content">
-            <Badge tone="white">
-              <Heart size={13} /> FOR THE NEIGHBOR IN YOU
-            </Badge>
-            <h2>
-              Your time.
-              <br />
-              Someone’s better day.
-            </h2>
-            <Link className="button button-light" to="/volunteer">
-              Find a way to help <ArrowUpRight size={18} />
-            </Link>
-          </div>
-        </div>
-      </section>
-      <section className="section neighborhood-section">
-        <div>
-          <span className="eyebrow">MORE THAN A PIN ON A MAP</span>
+        </Reveal>
+        <Reveal className="give-back-copy" delay={100}>
+          <p className="page-context">There’s room for you here, too.</p>
           <h2>
-            Finding food is a start.
+            Your Saturday.
             <br />
-            <em>Getting there changes things.</em>
+            Someone’s better week.
           </h2>
           <p>
-            A pantry is only helpful if you can actually reach it. Nourish helps
-            you see the whole picture, from dietary options to your trip home.
+            A few hours packing groceries, sharing a meal, or helping a neighbor
+            find their way. Discover a way to give back that fits your life.
           </p>
-          <Link className="text-link" to="/find-food/match">
-            Find what works for you <ArrowUpRight size={17} />
+          <Link className="button button-primary" to="/volunteer">
+            Find a way to help
           </Link>
-        </div>
-        <div className="feature-stack">
-          {[
-            [
-              Navigation,
-              "A way there, and a way forward.",
-              "Plan a visit around how you travel and when you’re free.",
-            ],
-            [
-              Leaf,
-              "Food that feels right for you.",
-              "Compare dietary options, accessibility, and pickup requirements.",
-            ],
-            [
-              Users,
-              "A community in your corner.",
-              "Explore organization-coordinated pickup and delivery assistance.",
-            ],
-          ].map(([Icon, title, desc]) => {
-            const I = Icon as typeof Leaf;
-            return (
-              <article key={title as string}>
-                <span>
-                  <I size={23} />
-                </span>
-                <div>
-                  <h3>{title as string}</h3>
-                  <p>{desc as string}</p>
-                </div>
-              </article>
-            );
-          })}
-        </div>
+          <small>
+            Volunteer discovery and signups are a working demonstration.
+          </small>
+        </Reveal>
       </section>
-      <section className="partner-banner section">
-        <div className="partner-symbol">
-          <HandHeart size={44} />
-        </div>
-        <div>
-          <span className="eyebrow">FOR COMMUNITY ORGANIZATIONS</span>
-          <h2>You bring the care. We’ll help connect it.</h2>
+      <section className="partner-section">
+        <Reveal>
+          <p className="page-context">For the people who bring us together</p>
+          <h2>
+            You bring the care.
+            <br />
+            We help connect it.
+          </h2>
+        </Reveal>
+        <Reveal delay={120}>
           <p>
-            Share distributions, welcome volunteers, and coordinate a little
-            more good.
+            Keep distributions clear, bring a few more volunteers on board, and
+            help your community take the next step. One connected workspace.
           </p>
-        </div>
-        <Link className="button button-outline" to="/organizations">
-          Let’s work together <MoveUpRight size={18} />
-        </Link>
+          <Link className="button button-outline" to="/organizations">
+            Explore the organization workspace
+          </Link>
+        </Reveal>
       </section>
-      <div className="home-note">
-        <Clock3 size={14} /> A working vision for better food access. All
-        locations, shifts, and impact figures are demonstration data.
-      </div>
-    </>
+    </div>
   );
 }

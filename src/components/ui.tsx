@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from "react";
-import { X, ArrowUpRight, Sprout, Check, LoaderCircle } from "lucide-react";
+import { X, Sprout, Check, LoaderCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 export function Brand() {
   return (
@@ -30,7 +30,6 @@ export function ArrowLink({
   return (
     <Link className="text-link" to={to}>
       {children}
-      <ArrowUpRight size={16} />
     </Link>
   );
 }
@@ -43,7 +42,6 @@ export function Empty({
 }) {
   return (
     <div className="empty">
-      <Sprout size={32} />
       <h3>{title}</h3>
       <div>{children}</div>
     </div>

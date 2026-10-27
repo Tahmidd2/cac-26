@@ -60,7 +60,7 @@ export function formatDate(date: string, long = false) {
   });
 }
 export function time(hour: number) {
-  return `${Math.floor(hour) % 12 || 12}${Math.round((hour % 1) * 60) ? ":" + String(Math.round((hour % 1) * 60)).padStart(2,"0") : ""} ${hour >= 12 ? "PM" : "AM"}`;
+  return `${Math.floor(hour) % 12 || 12}${Math.round((hour % 1) * 60) ? ":" + String(Math.round((hour % 1) * 60)).padStart(2, "0") : ""} ${hour >= 12 ? "PM" : "AM"}`;
 }
 export function nextDistribution(l: FoodLocation) {
   const weekday = new Date(today + "T12:00:00").getDay();

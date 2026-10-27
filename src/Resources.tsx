@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  ArrowUpRight,
-  ArrowRight,
   Heart,
   Leaf,
   ShoppingBasket,
@@ -85,7 +83,7 @@ export default function Resources() {
         <h1>
           You don’t have to
           <br />
-          <em>figure it all out alone.</em>
+          figure it all out alone.
         </h1>
         <p>
           A few trusted places to start. These links take you to real, official
@@ -114,7 +112,6 @@ export default function Resources() {
           rel="noreferrer"
         >
           Find real food assistance
-          <ArrowUpRight size={16} />
         </a>
       </div>
       <div className="resource-grid">
@@ -132,10 +129,7 @@ export default function Resources() {
             <span className="eyebrow">{r.category}</span>
             <h2>{r.title}</h2>
             <p>{r.description}</p>
-            <span className="text-link">
-              {r.link}
-              <ArrowUpRight size={15} />
-            </span>
+            <span className="text-link">{r.link}</span>
           </a>
         ))}
       </div>
@@ -183,7 +177,7 @@ export function Auth() {
         <h1>
           A place at the table.
           <br />
-          <em>For everyone.</em>
+          For everyone.
         </h1>
         <p>
           Whether you need a hand or have one to offer,
@@ -267,7 +261,6 @@ export function Auth() {
           }}
         >
           {mode === "Sign in" ? "Enter demo" : "Start exploring"}
-          <ArrowRight size={16} />
         </button>
         <p className="auth-note">
           Demo choices are stored only in this browser.
@@ -276,7 +269,6 @@ export function Auth() {
         </p>
         <Link to="/" className="text-link">
           Back to the neighborhood
-          <ArrowUpRight size={14} />
         </Link>
       </div>
     </section>
@@ -293,7 +285,6 @@ export function NotFound() {
       <p>This page isn’t here, but a good next step is.</p>
       <Link className="button button-primary" to="/find-food">
         Find nearby food
-        <ArrowRight size={17} />
       </Link>
     </section>
   );

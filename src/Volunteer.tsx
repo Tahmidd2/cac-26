@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
-  ArrowUpRight,
-  ArrowRight,
   ArrowLeft,
   Heart,
   MapPin,
@@ -115,7 +113,6 @@ export function OpportunityCard({
         </span>
         <Link className="text-link" to={`/volunteer/${o.id}`}>
           View shift
-          <ArrowUpRight size={14} />
         </Link>
       </div>
     </article>
@@ -159,7 +156,7 @@ export default function Volunteer() {
           <h1>
             Your time.
             <br />
-            <em>Someone’s better day.</em>
+            Someone’s better day.
           </h1>
           <p>
             Find where you’re needed. Discover nearby opportunities
@@ -169,11 +166,9 @@ export default function Volunteer() {
           <Link className="button button-primary" to="/volunteer/match">
             <Sparkles size={16} />
             Find my volunteer match
-            <ArrowUpRight size={16} />
           </Link>
           <Link className="text-link" to="/volunteer/dashboard">
             My volunteer schedule
-            <ArrowRight size={14} />
           </Link>
         </div>
         <div className="volunteer-hero-photo">
@@ -506,7 +501,6 @@ export function VolunteerDetail() {
             </p>
             <Link className="text-link" to={`/food/${l.id}`}>
               Meet the demo organization
-              <ArrowUpRight size={15} />
             </Link>
             <div className="notice">
               <Info size={16} />
@@ -565,10 +559,7 @@ export function VolunteerDetail() {
               ) : shiftHasEnded(o) ? (
                 "Shift has passed"
               ) : (
-                <>
-                  Count me in · Demo signup
-                  <ArrowUpRight size={16} />
-                </>
+                <>Count me in · Demo signup</>
               )}
             </button>
             <Link
@@ -613,7 +604,6 @@ export function VolunteerDetail() {
                 to="/volunteer/dashboard"
               >
                 See my schedule
-                <ArrowRight size={16} />
               </Link>
             </>
           ) : (
@@ -689,7 +679,6 @@ export function VolunteerDetail() {
                   className="button button-primary button-full"
                 >
                   Confirm demo signup
-                  <ArrowRight size={16} />
                 </button>
               </form>
             </>
@@ -716,16 +705,13 @@ export function VolunteerDashboard() {
       <div className="page-intro">
         <div>
           <span className="eyebrow">GOOD THINGS, ON THE CALENDAR</span>
-          <h1>
-            You’re part of <em>something good.</em>
-          </h1>
+          <h1>You’re part of something good.</h1>
           <p>
             Your volunteer commitments, with everything you need to show up.
           </p>
         </div>
         <Link className="button button-primary" to="/volunteer">
           Find another way to help
-          <ArrowUpRight size={16} />
         </Link>
       </div>
       <div className="dashboard-stats">
@@ -763,7 +749,6 @@ export function VolunteerDashboard() {
           </p>
           <Link className="button button-primary" to="/volunteer">
             Explore volunteer opportunities
-            <ArrowRight size={16} />
           </Link>
         </Empty>
       ) : (

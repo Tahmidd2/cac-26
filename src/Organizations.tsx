@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  ArrowUpRight,
-  ArrowRight,
   Building2,
   Users,
   CalendarDays,
@@ -38,7 +36,7 @@ export default function Organizations() {
         <h1>
           Good things grow
           <br />
-          <em>when we work together.</em>
+          when we work together.
         </h1>
         <p>
           More than a directory. A shared space to connect the food you have,
@@ -51,7 +49,6 @@ export default function Organizations() {
           onClick={() => update((s) => ({ ...s, role: "Organization" }))}
         >
           Explore the organization workspace
-          <ArrowUpRight size={17} />
         </Link>
         <small>No sign up needed. You’re exploring a demo.</small>
       </div>
@@ -99,7 +96,6 @@ export default function Organizations() {
           </p>
           <Link to="/organizations/dashboard" className="text-link">
             Take a look around
-            <ArrowRight size={17} />
           </Link>
         </div>
         <div className="preview-window">
@@ -388,7 +384,6 @@ function OpportunityEditor({
         )}
         <button className="button button-primary button-full" type="submit">
           {existing ? "Save opportunity" : "Publish demo opportunity"}
-          <ArrowUpRight size={16} />
         </button>
       </form>
     </Modal>
@@ -426,7 +421,6 @@ function AvailabilityForm({ location: l }: { location: FoodLocation }) {
         </div>
         <Link className="text-link" to={`/food/${l.id}`}>
           View public demo
-          <ArrowUpRight size={14} />
         </Link>
       </div>
       <label className="field">Distribution days</label>
@@ -589,19 +583,19 @@ export function OrganizationDashboard() {
             <Building2 size={13} />
             ORGANIZATION WORKSPACE · DEMO
           </span>
-          <h1>
-            A good day to <em>bring people together.</em>
-          </h1>
+          <h1>A good day to bring people together.</h1>
           <p>Welcome back. Here’s what’s happening in your community.</p>
         </div>
         <label className="workspace-org-select">
           <span>YOUR DEMO ORGANIZATION</span>
           <select value={orgId} onChange={(e) => setOrgId(e.target.value)}>
-            {state.locations.filter(l=>l.sourceKind!=="public").map((o) => (
-              <option key={o.id} value={o.id}>
-                {o.name}
-              </option>
-            ))}
+            {state.locations
+              .filter((l) => l.sourceKind !== "public")
+              .map((o) => (
+                <option key={o.id} value={o.id}>
+                  {o.name}
+                </option>
+              ))}
           </select>
         </label>
       </div>
@@ -720,7 +714,6 @@ export function OrganizationDashboard() {
                 onClick={() => setTab("Volunteer shifts")}
               >
                 Manage all shifts
-                <ArrowRight size={14} />
               </button>
             </div>
             <div className="workspace-panel activity-panel">
@@ -739,7 +732,6 @@ export function OrganizationDashboard() {
                   </p>
                   <Link className="text-link" to={`/food/${l.id}`}>
                     See the family experience
-                    <ArrowUpRight size={12} />
                   </Link>
                 </div>
               </div>
@@ -775,7 +767,6 @@ export function OrganizationDashboard() {
                     onClick={() => setTab("Assistance requests")}
                   >
                     Review requests
-                    <ArrowRight size={12} />
                   </button>
                 </div>
               </div>
@@ -950,7 +941,6 @@ export function OrganizationDashboard() {
                             : i === 1
                               ? "Assign coordinator & schedule"
                               : "Mark complete"}
-                          <ArrowRight size={12} />
                         </button>
                       )}
                       {i === 1 && (
